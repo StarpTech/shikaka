@@ -1,2 +1,58 @@
 # shikaka
-Effortless component library bundler with React and CSS Module support
+Opinionated library bundler with first-class React and CSS Module support.
+
+> Q: Do you want to distribute your components as easy as possible?
+> A: Shikaka!
+
+## Features
+
+- 🚀 Fast, zero-config by default.
+- 📦 Using Rollup under the hood.
+- ✔️ Builds for ES and CJS by default.
+- 🚗 Automatically transforms JS files using Babel/TypeScript.
+- 💼 Minification with ES6+ support
+- 💅 Built-in support for `Sass` and `CSS modules`.
+
+## Example
+
+Operates on a fixed directory structure like:
+
+```
+$ shikaka src/index.js
+
+your-library
+└── src
+    ├── components
+    │   └── Button
+    │       ├── index.js
+    │       └── index.module.css
+    └── index.js
+```
+
+and produces this:
+
+```
+dist
+├── cjs
+│   ├── Button.js
+│   └── index.js
+├── css
+│   └── styles.css
+└── es
+    ├── Button.js
+    └── index.js
+```
+
+## Help
+
+```
+shikaka --help
+```
+
+#### Roadmap
+
+- [ ] Typescript Support
+- [ ] SASS Support
+- [ ] Tests
+- [ ] CSS files on component level
+
