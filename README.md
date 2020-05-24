@@ -10,7 +10,7 @@
 - ✔️ Builds for ES and CJS by default.
 - 🚗 Automatically transforms JS files using Babel/TypeScript.
 - 💼 Minification with ES6+ support
-- 💅 Built-in support for `Sass` and `CSS modules`.
+- 💅 Built-in support for `CSS` ,`Sass` and `CSS modules`.
 
 ## Example
 
@@ -51,6 +51,5 @@ shikaka --help
 #### Roadmap
 
 - [ ] Typescript Support
-- [ ] SASS Support
 - [ ] Tests
-- [ ] CSS files on component level
+- [ ] Extract CSS files on component level
