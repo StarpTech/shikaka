@@ -2,7 +2,7 @@
 Opinionated library bundler with first-class React and CSS Module support.
 
 > Q: Do you want to distribute your components as easy as possible?
-> A: Shikaka!
+> A: [Shikaka!](https://www.youtube.com/watch?v=PcjFVTI4_Gw)
 
 ## Features
 
