@@ -54,4 +54,3 @@ shikaka --help
 - [ ] SASS Support
 - [ ] Tests
 - [ ] CSS files on component level
-

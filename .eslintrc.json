@@ -1,0 +1,31 @@
+{
+  "root": true,
+  "parser": "babel-eslint",
+  "env": {
+    "node": true,
+    "es6": true
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true,
+      "modules": true
+    }
+  },
+  "extends": [
+    "prettier",
+    "prettier/react",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "eslint:recommended"
+  ],
+  "globals": {
+    "document": true,
+    "window": true,
+    "process": true,
+    "fetch": false
+  },
+  "rules": {
+    "no-unused-vars": ["error", { "ignoreRestSiblings": true, "argsIgnorePattern": "^_" }]
+  },
+  "plugins": ["prettier", "import"]
+}

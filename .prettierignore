@@ -1,0 +1,19 @@
+# Generated Files
+
+.cache/
+.nyc_output
+node_modules
+snapshots
+coverage
+dist
+build
+public
+
+.vscode
+.idea
+.github
+.next
+*.lock
+*.log
+LICENSE
+.*

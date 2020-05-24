@@ -1,0 +1,13 @@
+# Generated Files
+dist
+static
+.next
+coverage
+styles
+__mocks__
+node_modules
+.cache/
+.nyc_output
+snapshots
+.eslintcache
+jsconfig.json

@@ -1,79 +1,75 @@
 #!/usr/bin/env node
 
-const rollup = require("rollup");
-const commonjs = require("@rollup/plugin-commonjs");
-const babel = require("@rollup/plugin-babel");
-const postcss = require("rollup-plugin-postcss");
-const replace = require("@rollup/plugin-replace");
-const { sizeSnapshot } = require("rollup-plugin-size-snapshot");
-const { terser } = require("rollup-plugin-terser");
+const rollup = require('rollup');
+const commonjs = require('@rollup/plugin-commonjs');
+const babel = require('@rollup/plugin-babel');
+const postcss = require('rollup-plugin-postcss');
+const replace = require('@rollup/plugin-replace');
+const { sizeSnapshot } = require('rollup-plugin-size-snapshot');
+const { terser } = require('rollup-plugin-terser');
 const ora = require('ora');
-const fs = require("fs-extra");
-const path = require("path");
-const cli = require("cac")("shikaka");
-const pkg = require("./package.json");
+const fs = require('fs-extra');
+const path = require('path');
+const cli = require('cac')('shikaka');
+const pkg = require('./package.json');
 
 const plugins = ({ cssExtractPath, bundleReport, minify }) =>
   [
     babel.default({
-      exclude: "node_modules/**",
+      exclude: 'node_modules/**',
       babelHelpers: 'bundled',
       presets: [
         [
-          "@babel/preset-env",
+          '@babel/preset-env',
           {
             loose: true,
             useBuiltIns: false,
             bugfixes: true,
             modules: false,
-            exclude: [
-              "transform-regenerator",
-              "transform-async-to-generator",
-              "proposal-object-rest-spread",
-            ],
-          },
-        ],
+            exclude: ['transform-regenerator', 'transform-async-to-generator', 'proposal-object-rest-spread']
+          }
+        ]
       ],
       plugins: [
-        "@babel/plugin-transform-react-jsx",
+        '@babel/plugin-transform-react-jsx',
         [
-          "babel-plugin-transform-replace-expressions",
+          'babel-plugin-transform-replace-expressions',
           {
             replace: {
-              "process.env.NODE_ENV": '"production"',
-            },
-          },
+              'process.env.NODE_ENV': '"production"'
+            }
+          }
         ],
         [
-          "@babel/plugin-proposal-object-rest-spread",
+          '@babel/plugin-proposal-object-rest-spread',
           {
             useBuiltIns: true,
-            loose: true,
-          },
+            loose: true
+          }
         ],
-        "@babel/plugin-proposal-optional-chaining",
-        "@babel/plugin-proposal-nullish-coalescing-operator",
-      ],
+        '@babel/plugin-proposal-optional-chaining',
+        '@babel/plugin-proposal-nullish-coalescing-operator'
+      ]
     }),
     postcss({
       modules: {
-        generateScopedName: "[folder]__[local]",
+        generateScopedName: '[folder]__[local]'
       },
-      extract: cssExtractPath,
+      extract: cssExtractPath
     }),
     commonjs(),
-    replace({ "process.env.NODE_ENV": "production" }),
+    replace({ 'process.env.NODE_ENV': 'production' }),
     minify ? terser() : null,
-    bundleReport ? sizeSnapshot({ printInfo: false }) : null,
+    bundleReport ? sizeSnapshot({ printInfo: false }) : null
   ].filter((p) => !!p);
 
-async function buildConfig({input, external, cssFileName, rootDir, bundleReport, minify }) {
-  const componentsPath = path.join(path.dirname(input), "components");
+async function buildConfig({ input, external, cssFileName, rootDir, bundleReport, minify }) {
+  const componentsPath = path.join(path.dirname(input), 'components');
   const files = await fs.readdir(componentsPath);
   const components = await Promise.all(
     files.map(async (name) => {
       const comPath = path.join(componentsPath, name);
-      const entry = path.join(comPath, "index.js");
+      const entry = path.join(comPath, 'index.js');
 
       const stat = await fs.stat(comPath);
       if (!stat.isDirectory()) return null;
@@ -95,60 +91,50 @@ async function buildConfig({input, external, cssFileName, rootDir, bundleReport,
   const inputOptions = {
     input: inputs,
     plugins: plugins({ cssExtractPath: `css/${cssFileName}`, bundleReport, minify }),
-    external,
+    external
   };
 
   return {
-    inputOptions,
+    inputOptions
   };
 }
 
 cli
-  .command("<input>", "Library entry file")
-  .option("--root-dir <rootDir>", "The root directory to resolve files from", {
-    default: ".",
+  .command('<input>', 'Library entry file')
+  .option('--root-dir <rootDir>', 'The root directory to resolve files from', {
+    default: '.'
   })
-  .option("--out-dir <outDir>", "Output directory", { default: "dist" })
-  .option("--minify", "Minify output files", { default: false })
-  .option("--report", "Generates a report about your bundle size", { default: false })
-  .option(
-    "--css-file-name <cssFileName>",
-    "Output directory of the extracted CSS",
-    { default: "styles.css" }
-  )
-  .option(
-    "--format <format>",
-    "Output format (cjs | umd | es | iife), can be used multiple times",
-    { default: ["es", "cjs"] }
-  )
-  .option("--banner <banner>", "The file banner")
-  .option("--footer <footer>", "The file footer")
+  .option('--out-dir <outDir>', 'Output directory', { default: 'dist' })
+  .option('--minify', 'Minify output files', { default: false })
+  .option('--report', 'Generates a report about your bundle size', { default: false })
+  .option('--css-file-name <cssFileName>', 'Output directory of the extracted CSS', { default: 'styles.css' })
+  .option('--format <format>', 'Output format (cjs | umd | es | iife), can be used multiple times', {
+    default: ['es', 'cjs']
+  })
+  .option('--banner <banner>', 'The file banner')
+  .option('--footer <footer>', 'The file footer')
   .example((bin) => `  ${bin} src/index.js`)
   .example((bin) => `  ${bin} src/index.js --format cjs --format esm`)
   .example((bin) => `  ${bin} src/index.js --root-dir packages/ui-library`)
   .example((bin) => `  ${bin} src/index.js --css-file-name theme.css`)
   .action(async (input, options) => {
-    const userPkg = await fs.readJSON(
-      path.resolve(options.rootDir, "package.json")
-    );
+    const userPkg = await fs.readJSON(path.resolve(options.rootDir, 'package.json'));
 
-    const deps = Object.keys(userPkg.dependencies).concat(
-      Object.keys(userPkg.peerDependencies)
-    );
+    const deps = Object.keys(userPkg.dependencies).concat(Object.keys(userPkg.peerDependencies));
     const external = (x) => deps.some((y) => x.startsWith(y));
 
     const globals = {
-      react: "React",
-      "react-dom": "ReactDOM",
+      react: 'React',
+      'react-dom': 'ReactDOM'
     };
 
     const esOutput = {
       dir: options.outDir,
-      entryFileNames: "[format]/[name].js",
-      chunkFileNames: "[format]/chunks/[name]-[hash].js",
+      entryFileNames: '[format]/[name].js',
+      chunkFileNames: '[format]/chunks/[name]-[hash].js',
       banner: options.banner,
       footer: options.footer,
-      globals,
+      globals
     };
 
     const { inputOptions } = await buildConfig({
@@ -158,28 +144,26 @@ cli
       rootDir: options.rootDir,
       cssFileName: options.cssFileName,
       bundleReport: options.report,
-      external,
+      external
     });
 
     const outputOptions = {
       ...esOutput,
-      minifyInternalExports: false, // for better readability
+      minifyInternalExports: false // for better readability
     };
 
     const spinner = ora('Bundling').start();
 
     // create a bundle
     const bundle = await rollup.rollup(inputOptions);
-    const formats = Array.isArray(options.format)
-      ? options.format
-      : [options.format];
+    const formats = Array.isArray(options.format) ? options.format : [options.format];
     for (const format of formats) {
       spinner.text = `Bundle for '${format}'`;
       // or write the bundle to disk
       await bundle.write({ ...outputOptions, format });
     }
 
-    spinner.stop()
+    spinner.stop();
   });
 
 cli.version(pkg.version);
@@ -187,7 +171,7 @@ cli.help();
 
 cli.parse();
 
-process.on("unhandledRejection", (err) => {
+process.on('unhandledRejection', (err) => {
   console.error(err);
   process.exit(1);
 });
