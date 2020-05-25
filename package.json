@@ -26,6 +26,11 @@
       "pre-commit": "lint-staged"
     }
   },
+  "browserslist": [
+    "defaults",
+    "not ie 11",
+    "not IE_Mob 11"
+  ],
   "dependencies": {
     "@babel/core": "^7.9.6",
     "@babel/plugin-proposal-object-rest-spread": "^7.9.6",
