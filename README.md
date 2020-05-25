@@ -34,9 +34,10 @@ and produces this:
 dist
 ├── cjs
 │   ├── Button.js
-│   └── index.js
+│   ├── index.js
 ├── css
-│   └── styles.css
+│   ├── styles.css
+│   └── styles.es.css
 └── es
     ├── Button.js
     └── index.js

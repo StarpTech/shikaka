@@ -52,8 +52,16 @@ const plugins = ({ cssExtractPath, bundleReport, minify }) =>
       ]
     }),
     postcss({
+      extensions: ['.css', '.scss'],
+      plugins: [
+        require('postcss-import'),
+        require('postcss-nested'),
+        require('postcss-preset-env'),
+        minify ? require('cssnano') : null
+      ].filter((p) => !!p),
       modules: {
-        generateScopedName: '[folder]__[local]'
+        generateScopedName: '[folder]__[local]',
+        scopeBehaviour: 'local'
       },
       extract: cssExtractPath
     }),
@@ -63,7 +71,7 @@ const plugins = ({ cssExtractPath, bundleReport, minify }) =>
     bundleReport ? sizeSnapshot({ printInfo: false }) : null
   ].filter((p) => !!p);
 
-async function buildConfig({ input, external, cssFileName, rootDir, bundleReport, minify }) {
+async function buildConfig({ format, input, external, cssFileName, rootDir, bundleReport, minify }) {
   const componentsPath = path.join(path.dirname(input), 'components');
   const files = await fs.readdir(componentsPath);
   const components = await Promise.all(
@@ -90,7 +98,11 @@ async function buildConfig({ input, external, cssFileName, rootDir, bundleReport
   // see below for details on the options
   const inputOptions = {
     input: inputs,
-    plugins: plugins({ cssExtractPath: `css/${cssFileName}`, bundleReport, minify }),
+    plugins: plugins({
+      cssExtractPath: `css/${path.basename(cssFileName, '.css')}${format !== 'cjs' ? `.${format}` : ''}.css`,
+      bundleReport,
+      minify
+    }),
     external
   };
 
@@ -105,7 +117,7 @@ cli
     default: '.'
   })
   .option('--out-dir <outDir>', 'Output directory', { default: 'dist' })
-  .option('--minify', 'Minify output files', { default: false })
+  .option('--minify', 'Minify CSS and JS output files', { default: false })
   .option('--report', 'Generates a report about your bundle size', { default: false })
   .option('--css-file-name <cssFileName>', 'Output directory of the extracted CSS', { default: 'styles.css' })
   .option('--format <format>', 'Output format (cjs | umd | es | iife), can be used multiple times', {
@@ -118,6 +130,7 @@ cli
   .example((bin) => `  ${bin} src/index.js --root-dir packages/ui-library`)
   .example((bin) => `  ${bin} src/index.js --css-file-name theme.css`)
   .action(async (input, options) => {
+    await fs.remove(options.outDir);
     const userPkg = await fs.readJSON(path.resolve(options.rootDir, 'package.json'));
 
     const deps = Object.keys(userPkg.dependencies).concat(Object.keys(userPkg.peerDependencies));
@@ -136,34 +149,38 @@ cli
       footer: options.footer,
       globals
     };
-
-    const { inputOptions } = await buildConfig({
-      sizeSnapshot: options.sizeSnapshot,
-      minify: options.minify,
-      input,
-      rootDir: options.rootDir,
-      cssFileName: options.cssFileName,
-      bundleReport: options.report,
-      external
-    });
-
     const outputOptions = {
       ...esOutput,
       minifyInternalExports: false // for better readability
     };
 
     const spinner = ora('Bundling').start();
-
-    // create a bundle
-    const bundle = await rollup.rollup(inputOptions);
     const formats = Array.isArray(options.format) ? options.format : [options.format];
     for (const format of formats) {
-      spinner.text = `Bundle for '${format}'`;
-      // or write the bundle to disk
-      await bundle.write({ ...outputOptions, format });
+      // create a bundle
+      const { inputOptions } = await buildConfig({
+        sizeSnapshot: options.sizeSnapshot,
+        minify: options.minify,
+        format,
+        input,
+        rootDir: options.rootDir,
+        cssFileName: options.cssFileName,
+        bundleReport: options.report,
+        external
+      });
+
+      try {
+        const bundle = await rollup.rollup(inputOptions);
+        spinner.text = `Bundle for '${format}'`;
+        // or write the bundle to disk
+        await bundle.write({ ...outputOptions, format });
+        spinner.stop();
+      } catch (error) {
+        spinner.color = 'red';
+        spinner.fail(error.message);
+      }
     }
 
-    spinner.stop();
   });
 
 cli.version(pkg.version);

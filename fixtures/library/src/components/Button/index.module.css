@@ -1,3 +1,12 @@
 .button {
   width: auto;
 }
+.unused {
+  width: auto;
+}
+.bar-1 :global(.bar) .bar-2 {
+  color: white;
+}
+:global .page {
+  padding: 20px;
+}
