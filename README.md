@@ -7,7 +7,6 @@
 
 - 🚀 Fast, zero-config by default.
 - 📦 Using Rollup under the hood.
-- ✔️ Builds for ES and CJS by default.
 - 🚗 Automatically transforms JS files using Babel/TypeScript.
 - 💼 JS, CSS Minification
 - 💅 Built-in support for `CSS` ,`Sass` and `CSS modules`.
@@ -30,19 +29,34 @@ your-library
     └── index.js
 ```
 
-and produces this:
+and produces by default this:
 
 ```
 dist
-├── cjs
-│   ├── Button.js
-│   ├── index.js
-├── css
-│   ├── styles.css
-│   └── styles.es.css
-└── es
-    ├── Button.js
-    └── index.js
+├── Button.js
+├── index.js
+├── Modal.js
+└── styles.css
+```
+
+consumable:
+
+```jsx
+import { Button } from 'your-module' // or
+import Button from 'your-module/dist/Button'
+```
+
+Don't forget to point to the right entry files in your package.json
+
+```js
+{
+  "name": "foo",                   // your package name
+  "source": "src/index.js",       // your source code
+  "module": "dist/index.js",     // where to generate the ESM bundle
+  "scripts": {
+    "build": "shikaka src/index.js"
+  }
+}
 ```
 
 ## Help
@@ -65,7 +79,7 @@ Options:
   --minify                       Minify CSS and JS output files (default: false)
   --report                       Generates a report about your bundle size (default: false)
   --css-file-name <cssFileName>  Output directory of the extracted CSS (default: styles.css)
-  --format <format>              Output format (cjs | umd | es | iife), can be used multiple times (default: es,cjs)
+  --format <format>              Output format (cjs | umd | es | iife), can be used multiple times (default: es)
   --quiet                        Show minimal logs (default: false)
   --banner <banner>              The file banner 
   --footer <footer>              The file footer 

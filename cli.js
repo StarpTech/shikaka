@@ -73,7 +73,16 @@ const plugins = ({ cssExtractPath, bundleReport, minify }) =>
     bundleReport ? sizeSnapshot({ printInfo: false }) : null
   ].filter((p) => !!p);
 
-async function buildConfig({ format, input, external, cssFileName, rootDir, bundleReport, minify }) {
+async function buildConfig({
+  format,
+  input,
+  external,
+  cssFileName,
+  rootDir,
+  bundleReport,
+  minify,
+  singleFormat
+}) {
   const componentsPath = path.join(path.dirname(input), 'components');
   const files = await fs.readdir(componentsPath);
   const components = await Promise.all(
@@ -97,11 +106,16 @@ async function buildConfig({ format, input, external, cssFileName, rootDir, bund
     inputs[name] = url;
   }
 
+  let cssName = cssFileName
+  if (!singleFormat) {
+    cssName = `css/${path.basename(cssFileName, '.css')}.${format}.css`
+  }
+
   // see below for details on the options
   const inputOptions = {
     input: inputs,
     plugins: plugins({
-      cssExtractPath: `css/${path.basename(cssFileName, '.css')}${format !== 'cjs' ? `.${format}` : ''}.css`,
+      cssExtractPath: cssName,
       bundleReport,
       minify
     }),
@@ -123,7 +137,7 @@ cli
   .option('--report', 'Generates a report about your bundle size', { default: false })
   .option('--css-file-name <cssFileName>', 'Output directory of the extracted CSS', { default: 'styles.css' })
   .option('--format <format>', 'Output format (cjs | umd | es | iife), can be used multiple times', {
-    default: ['es', 'cjs']
+    default: ['es']
   })
   .option('--quiet', 'Show minimal logs', { default: false })
   .option('--banner <banner>', 'The file banner')
@@ -138,6 +152,8 @@ cli
 
     const deps = Object.keys(userPkg.dependencies).concat(Object.keys(userPkg.peerDependencies));
     const external = (x) => deps.some((y) => x.startsWith(y));
+    const formats = Array.isArray(options.format) ? options.format : [options.format];
+    const singleFormat = formats.length === 1;
 
     const globals = {
       react: 'React',
@@ -146,8 +162,8 @@ cli
 
     const esOutput = {
       dir: options.outDir,
-      entryFileNames: '[format]/[name].js',
-      chunkFileNames: '[format]/chunks/[name]-[hash].js',
+      entryFileNames: `${!singleFormat ? '[format]/' : ''}[name].js`,
+      chunkFileNames: `${!singleFormat ? '[format]/' : ''}[name]-[hash].js`,
       banner: options.banner,
       footer: options.footer,
       globals
@@ -158,12 +174,12 @@ cli
     };
 
     const spinner = ora('Bundling').start();
-    const formats = Array.isArray(options.format) ? options.format : [options.format];
     for (const format of formats) {
       // create a bundle
       const { inputOptions } = await buildConfig({
         sizeSnapshot: options.sizeSnapshot,
         minify: options.minify,
+        singleFormat,
         format,
         input,
         rootDir: options.rootDir,
