@@ -9,7 +9,7 @@
 - 📦 Using Rollup under the hood.
 - ✔️ Builds for ES and CJS by default.
 - 🚗 Automatically transforms JS files using Babel/TypeScript.
-- 💼 Minification with ES6+ support
+- 💼 JS, CSS Minification
 - 💅 Built-in support for `CSS` ,`Sass` and `CSS modules`.
 
 ## Example
