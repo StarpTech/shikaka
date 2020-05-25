@@ -7,7 +7,7 @@
 
 - 🚀 Fast, zero-config by default.
 - 📦 Using Rollup under the hood.
-- 🚗 Automatically transforms JS files using Babel/TypeScript.
+- 🚗 Automatically transforms JS files using Babel.
 - 💼 JS, CSS Minification
 - 💅 Built-in support for `CSS` ,`Sass` and `CSS modules`.
 

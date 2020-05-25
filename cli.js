@@ -15,7 +15,7 @@ const path = require('path');
 const cli = require('cac')('shikaka');
 const pkg = require('./package.json');
 
-const plugins = ({ cssExtractPath, bundleReport, minify }) =>
+const rollupPlugins = ({ cssExtractPath, bundleReport, minify }) =>
   [
     babel.default({
       exclude: 'node_modules/**',
@@ -114,7 +114,11 @@ async function buildConfig({
   // see below for details on the options
   const inputOptions = {
     input: inputs,
-    plugins: plugins({
+    treeshake: {
+      propertyReadSideEffects: false,
+      moduleSideEffects: false
+    },
+    plugins: rollupPlugins({
       cssExtractPath: cssName,
       bundleReport,
       minify
@@ -166,6 +170,8 @@ cli
       chunkFileNames: `${!singleFormat ? '[format]/' : ''}[name]-[hash].js`,
       banner: options.banner,
       footer: options.footer,
+      freeze: false,
+      esModule: false,
       globals
     };
     const outputOptions = {
