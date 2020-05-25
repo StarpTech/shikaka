@@ -48,7 +48,35 @@ dist
 ## Help
 
 ```
-shikaka --help
+shikaka v0.0.1
+
+Usage:
+  $ shikaka <input>
+
+Commands:
+  <input>  Library entry file
+
+For more info, run any command with the `--help` flag:
+  $ shikaka --help
+
+Options:
+  --root-dir <rootDir>           The root directory to resolve files from (default: .)
+  --out-dir <outDir>             Output directory (default: dist)
+  --minify                       Minify CSS and JS output files (default: false)
+  --report                       Generates a report about your bundle size (default: false)
+  --css-file-name <cssFileName>  Output directory of the extracted CSS (default: styles.css)
+  --format <format>              Output format (cjs | umd | es | iife), can be used multiple times (default: es,cjs)
+  --quiet                        Show minimal logs (default: false)
+  --banner <banner>              The file banner 
+  --footer <footer>              The file footer 
+  -v, --version                  Display version number 
+  -h, --help                     Display this message 
+
+Examples:
+  shikaka src/index.js
+  shikaka src/index.js --format cjs --format esm
+  shikaka src/index.js --root-dir packages/ui-library
+  shikaka src/index.js --css-file-name theme.css
 ```
 
 #### Roadmap
