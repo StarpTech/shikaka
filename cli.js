@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+require('v8-compile-cache');
+
 const rollup = require('rollup');
 const commonjs = require('@rollup/plugin-commonjs');
 const babel = require('@rollup/plugin-babel');
@@ -123,6 +125,7 @@ cli
   .option('--format <format>', 'Output format (cjs | umd | es | iife), can be used multiple times', {
     default: ['es', 'cjs']
   })
+  .option('--quiet', 'Show minimal logs', { default: false })
   .option('--banner <banner>', 'The file banner')
   .option('--footer <footer>', 'The file footer')
   .example((bin) => `  ${bin} src/index.js`)
@@ -178,9 +181,12 @@ cli
       } catch (error) {
         spinner.color = 'red';
         spinner.fail(error.message);
+        if (!options.quiet) {
+          console.error(error);
+        }
+        process.exit(1);
       }
     }
-
   });
 
 cli.version(pkg.version);
