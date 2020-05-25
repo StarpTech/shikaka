@@ -11,7 +11,7 @@
 - 💼 JS, CSS Minification
 - 💅 Built-in support for `CSS` ,`Sass` and `CSS modules`.
 
-This tool is not intended use as alternative to webpack or rollup. We don't bundle `node_modules` or supporting any project requirement. The output by this library is intented to use in a modern module bundler like Parcel, Webpack. This tool was created due to the frustration of bundling React components for Next.js + CSS Modules.
+This tool is not intended use as alternative to webpack or rollup. We don't bundle `node_modules` or supporting every project requirement. The output by this library is intented to use in a modern module bundler like Parcel or Webpack. This tool was created due to the frustration of bundling React components with good defaults and fist-class CSS Modules support.
 
 ## Example
 
