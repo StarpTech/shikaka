@@ -6,6 +6,7 @@ const rollup = require('rollup');
 const commonjs = require('@rollup/plugin-commonjs');
 const babel = require('@rollup/plugin-babel');
 const postcss = require('rollup-plugin-postcss');
+const json = require('@rollup/plugin-json');
 const replace = require('@rollup/plugin-replace');
 const { sizeSnapshot } = require('rollup-plugin-size-snapshot');
 const { terser } = require('rollup-plugin-terser');
@@ -15,74 +16,7 @@ const path = require('path');
 const cli = require('cac')('shikaka');
 const pkg = require('./package.json');
 
-const rollupPlugins = ({ cssExtractPath, bundleReport, minify }) =>
-  [
-    babel.default({
-      exclude: 'node_modules/**',
-      babelHelpers: 'bundled',
-      presets: [
-        [
-          '@babel/preset-env',
-          {
-            loose: true,
-            useBuiltIns: false,
-            bugfixes: true,
-            modules: false,
-            exclude: ['transform-regenerator', 'transform-async-to-generator', 'proposal-object-rest-spread']
-          }
-        ]
-      ],
-      plugins: [
-        '@babel/plugin-transform-react-jsx',
-        [
-          'babel-plugin-transform-replace-expressions',
-          {
-            replace: {
-              'process.env.NODE_ENV': '"production"'
-            }
-          }
-        ],
-        [
-          '@babel/plugin-proposal-object-rest-spread',
-          {
-            useBuiltIns: true,
-            loose: true
-          }
-        ],
-        '@babel/plugin-proposal-optional-chaining',
-        '@babel/plugin-proposal-nullish-coalescing-operator'
-      ]
-    }),
-    postcss({
-      extensions: ['.css', '.scss'],
-      plugins: [
-        require('postcss-import'),
-        require('postcss-nested'),
-        require('postcss-preset-env'),
-        minify ? require('cssnano') : null
-      ].filter((p) => !!p),
-      modules: {
-        generateScopedName: '[folder]__[local]',
-        scopeBehaviour: 'local'
-      },
-      extract: cssExtractPath
-    }),
-    commonjs(),
-    replace({ 'process.env.NODE_ENV': 'production' }),
-    minify ? terser() : null,
-    bundleReport ? sizeSnapshot({ printInfo: false }) : null
-  ].filter((p) => !!p);
-
-async function buildConfig({
-  format,
-  input,
-  external,
-  cssFileName,
-  rootDir,
-  bundleReport,
-  minify,
-  singleFormat
-}) {
+async function buildRollupInputConfig({ input, external, rootDir, bundleReport, minify, writeMeta }) {
   const componentsPath = path.join(path.dirname(input), 'components');
   const files = await fs.readdir(componentsPath);
   const components = await Promise.all(
@@ -106,23 +40,74 @@ async function buildConfig({
     inputs[name] = url;
   }
 
-  let cssName = cssFileName
-  if (!singleFormat) {
-    cssName = `css/${path.basename(cssFileName, '.css')}.${format}.css`
-  }
-
-  // see below for details on the options
   const inputOptions = {
     input: inputs,
     treeshake: {
       propertyReadSideEffects: false,
       moduleSideEffects: false
     },
-    plugins: rollupPlugins({
-      cssExtractPath: cssName,
-      bundleReport,
-      minify
-    }),
+    plugins: [
+      babel.default({
+        exclude: 'node_modules/**',
+        babelHelpers: 'bundled',
+        presets: [
+          '@babel/preset-react',
+          [
+            '@babel/preset-env',
+            {
+              loose: true,
+              useBuiltIns: false,
+              bugfixes: true,
+              modules: false,
+              exclude: [
+                'transform-regenerator',
+                'transform-async-to-generator',
+                'proposal-object-rest-spread'
+              ]
+            }
+          ]
+        ],
+        plugins: [
+          [
+            'babel-plugin-transform-replace-expressions',
+            {
+              replace: {
+                'process.env.NODE_ENV': '"production"'
+              }
+            }
+          ],
+          [
+            '@babel/plugin-proposal-object-rest-spread',
+            {
+              useBuiltIns: true,
+              loose: true
+            }
+          ],
+          '@babel/plugin-proposal-optional-chaining',
+          '@babel/plugin-proposal-nullish-coalescing-operator'
+        ]
+      }),
+      postcss({
+        extensions: ['.css', '.scss'],
+        plugins: [
+          require('postcss-import'),
+          require('postcss-nested'),
+          require('postcss-preset-env'),
+          minify ? require('cssnano') : null
+        ].filter((p) => !!p),
+        inject: false,
+        modules: {
+          generateScopedName: '[folder]__[local]',
+          scopeBehaviour: 'local'
+        },
+        extract: !!writeMeta
+      }),
+      json(),
+      commonjs(),
+      replace({ 'process.env.NODE_ENV': 'production' }),
+      minify ? terser() : null,
+      bundleReport ? sizeSnapshot({ printInfo: false }) : null
+    ].filter((p) => !!p),
     external
   };
 
@@ -139,7 +124,6 @@ cli
   .option('--out-dir <outDir>', 'Output directory', { default: 'dist' })
   .option('--minify', 'Minify CSS and JS output files', { default: false })
   .option('--report', 'Generates a report about your bundle size', { default: false })
-  .option('--css-file-name <cssFileName>', 'Output directory of the extracted CSS', { default: 'styles.css' })
   .option('--format <format>', 'Output format (cjs | umd | es | iife), can be used multiple times', {
     default: ['es']
   })
@@ -180,16 +164,16 @@ cli
     };
 
     const spinner = ora('Bundling').start();
-    for (const format of formats) {
+    for (let i = 0; i < formats.length; i++) {
+      const format = formats[i];
       // create a bundle
-      const { inputOptions } = await buildConfig({
+      const { inputOptions } = await buildRollupInputConfig({
         sizeSnapshot: options.sizeSnapshot,
         minify: options.minify,
-        singleFormat,
         format,
+        writeMeta: i === 0,
         input,
         rootDir: options.rootDir,
-        cssFileName: options.cssFileName,
         bundleReport: options.report,
         external
       });

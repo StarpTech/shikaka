@@ -78,7 +78,6 @@ Options:
   --out-dir <outDir>             Output directory (default: dist)
   --minify                       Minify CSS and JS output files (default: false)
   --report                       Generates a report about your bundle size (default: false)
-  --css-file-name <cssFileName>  Output directory of the extracted CSS (default: styles.css)
   --format <format>              Output format (cjs | umd | es | iife), can be used multiple times (default: es)
   --quiet                        Show minimal logs (default: false)
   --banner <banner>              The file banner 
