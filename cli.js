@@ -93,12 +93,10 @@ async function buildRollupInputConfig({ input, external, rootDir, bundleReport, 
         ]
       }),
       postcss({
-        extensions: ['.css', '.scss'],
         plugins: [
           require('postcss-import'),
           require('postcss-nested'),
-          require('postcss-preset-env'),
-          minify ? require('cssnano') : null
+          require('postcss-preset-env')
         ].filter((p) => !!p),
         inject: false,
         modules: {

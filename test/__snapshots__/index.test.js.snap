@@ -89,6 +89,11 @@ exports[`fixtures build library with shikaka 7`] = `
 .page {
   padding: 20px;
 }
+.Footer__footer {
+  color: #fff;
+  background: #428bca;
+}
+
 .Modal__modal {
   width: auto;
 }
@@ -96,10 +101,5 @@ exports[`fixtures build library with shikaka 7`] = `
   border: 1px solid;
   font: 100% Helvetica, sans-serif;
   color: #333;
-}
-.Footer__footer {
-  color: #fff;
-  background: #428bca;
-}
-"
+}"
 `;
