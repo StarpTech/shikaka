@@ -40,8 +40,31 @@ async function buildRollupInputConfig({ input, external, rootDir, bundleReport, 
     inputs[name] = url;
   }
 
+  var sortable = [];
+  for (let i in inputs) {
+    sortable.push([i, inputs[i]]);
+  }
+
+  sortable.sort(function (a, b) {
+    const filePathA = a[1].toUpperCase(); // ignore upper and lowercase
+    const filePathB = b[1].toUpperCase(); // ignore upper and lowercase
+    if (filePathA < filePathB) {
+      return -1;
+    }
+    if (filePathA > filePathB) {
+      return 1;
+    }
+    // names must be equal
+    return 0;
+  });
+
+  const objSorted = {};
+  sortable.forEach(function (item) {
+    objSorted[item[0]] = item[1];
+  });
+
   const inputOptions = {
-    input: inputs,
+    input: objSorted,
     treeshake: {
       propertyReadSideEffects: false,
       moduleSideEffects: false

@@ -7,9 +7,9 @@ Directory tree:
 
 library
   dist
+    Button.css
     Button.js
     Modal.js
-    index.css
     index.js
   src
     components
@@ -26,6 +26,27 @@ library
 exports[`fixtures build library with shikaka 2`] = `4`;
 
 exports[`fixtures build library with shikaka 3`] = `
+".Button__button {
+  width: auto;
+}
+.Button__unused {
+  width: auto;
+}
+.Button__bar-1 .bar .Button__bar-2 {
+  color: white;
+}
+.page {
+  padding: 20px;
+}
+.Modal__modal {
+  width: auto;
+}
+.Modal__modal__foo {
+  border: 1px solid;
+}"
+`;
+
+exports[`fixtures build library with shikaka 4`] = `
 "var styles = {\\"button\\":\\"Button__button\\",\\"unused\\":\\"Button__unused\\",\\"bar-1\\":\\"Button__bar-1\\",\\"bar-2\\":\\"Button__bar-2\\"};
 
 // eslint-disable-next-line no-unused-vars
@@ -39,33 +60,12 @@ export default Button;
 "
 `;
 
-exports[`fixtures build library with shikaka 4`] = `
+exports[`fixtures build library with shikaka 5`] = `
 "// eslint-disable-next-line no-unused-vars
 function Modal() {}
 
 export default Modal;
 "
-`;
-
-exports[`fixtures build library with shikaka 5`] = `
-".Modal__modal {
-  width: auto;
-}
-.Modal__modal__foo {
-  border: 1px solid;
-}
-.Button__button {
-  width: auto;
-}
-.Button__unused {
-  width: auto;
-}
-.Button__bar-1 .bar .Button__bar-2 {
-  color: white;
-}
-.page {
-  padding: 20px;
-}"
 `;
 
 exports[`fixtures build library with shikaka 6`] = `
