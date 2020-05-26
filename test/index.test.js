@@ -31,7 +31,8 @@ describe('fixtures', () => {
     await sleep(1);
 
     const entry = relative(process.cwd(), resolve(fixturePath, 'src', 'index.js'));
-    const scriptArgs = ['cli.js', entry, '--out-dir', `${fixturePath}/dist`];
+    const outDir = relative(process.cwd(), `${fixturePath}/dist`);
+    const scriptArgs = ['cli.js', entry, '--out-dir', outDir];
     await execa(DEFAULT_SCRIPT, scriptArgs);
 
     await sleep(1);

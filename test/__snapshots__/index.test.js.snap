@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`fixtures build library with microbundle 1`] = `
-"Used script: node cli.js test/fixtures/library/src/index.js --out-dir /mnt/ssd/repositories/shikaka/test/fixtures/library/dist
+"Used script: node cli.js test/fixtures/library/src/index.js --out-dir test/fixtures/library/dist
 
 Directory tree:
 
