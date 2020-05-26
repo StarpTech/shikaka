@@ -11,8 +11,8 @@
 - 📦 Using Rollup under the hood.
 - 🤳 Using browserlist to produce highly compatible JS and CSS.
 - 🚗 Automatically transforms JS files using Babel.
-- 💼 JS, CSS Minification
-- 💅 Built-in support for `CSS` ,`SASS`, `LESS` and `CSS modules`.
+- 💼 JS, CSS Minification.
+- 💅 Built-in support for `CSS modules` in `SASS`, `LESS` or `CSS`.
 
 This tool is not intended use as alternative to webpack or rollup. We don't bundle `node_modules` or supporting every project requirement. The output by this library is intented to use in a modern module bundler like Parcel or Webpack. This tool was created due to the frustration of bundling React components with good defaults and first-class CSS Modules support.
 
@@ -49,17 +49,21 @@ import { Button } from 'your-module' // or
 import Button from 'your-module/dist/Button'
 ```
 
-Don't forget to point to the right entry files in your package.json
+## Installation & Setup
+
+1. Install by running: `npm i -D shikaka`
+2. Set up your `package.json`:
 
 ```js
 {
-  "name": "foo",                   // your package name
+  "name": "foo",                  // your package name
   "source": "src/index.js",       // your source code
-  "module": "dist/index.js",     // where to generate the ESM bundle
+  "main": "dist/cjs/index.js",    // for CommonJS/Node bundle
+  "module": "dist/es/index.js",   // for ESM bundle
   "scripts": {
-    "build": "shikaka src/index.js"
+    "build": "shikaka src/index.js --format cjs --format es" // by default only ESM
   },
-  "browserslist": [             // your supported browsers
+  "browserslist": [             // your supported browsers (used to configure babel and postcss)
     "defaults",
     "not ie 11",
     "not IE_Mob 11"
