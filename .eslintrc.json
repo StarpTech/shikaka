@@ -3,7 +3,8 @@
   "parser": "babel-eslint",
   "env": {
     "node": true,
-    "es6": true
+    "es6": true,
+    "jest/globals": true
   },
   "parserOptions": {
     "ecmaFeatures": {
@@ -27,5 +28,5 @@
   "rules": {
     "no-unused-vars": ["error", { "ignoreRestSiblings": true, "argsIgnorePattern": "^_" }]
   },
-  "plugins": ["prettier", "import"]
+  "plugins": ["prettier", "import", "jest"]
 }

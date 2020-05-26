@@ -1,0 +1,74 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`fixtures build library with microbundle 1`] = `
+"Used script: node cli.js test/fixtures/library/src/index.js --out-dir /mnt/ssd/repositories/shikaka/test/fixtures/library/dist
+
+Directory tree:
+
+library
+  dist
+    Button.js
+    Modal.js
+    index.css
+    index.js
+  src
+    components
+      Button
+        index.js
+        index.module.css
+      Modal
+        index.js
+        index.module.scss
+    index.js
+"
+`;
+
+exports[`fixtures build library with microbundle 2`] = `4`;
+
+exports[`fixtures build library with microbundle 3`] = `
+"var styles = {\\"button\\":\\"Button__button\\",\\"unused\\":\\"Button__unused\\",\\"bar-1\\":\\"Button__bar-1\\",\\"bar-2\\":\\"Button__bar-2\\"};
+
+// eslint-disable-next-line no-unused-vars
+function Button() {
+  return /*#__PURE__*/React.createElement(\\"div\\", {
+    className: styles.button
+  });
+}
+
+export default Button;
+"
+`;
+
+exports[`fixtures build library with microbundle 4`] = `
+"// eslint-disable-next-line no-unused-vars
+function Modal() {}
+
+export default Modal;
+"
+`;
+
+exports[`fixtures build library with microbundle 5`] = `
+".Button__button {
+  width: auto;
+}
+.Button__unused {
+  width: auto;
+}
+.Button__bar-1 .bar .Button__bar-2 {
+  color: white;
+}
+.page {
+  padding: 20px;
+}
+.Modal__modal {
+  width: auto;
+}
+.Modal__modal__foo {
+  border: 1px solid;
+}"
+`;
+
+exports[`fixtures build library with microbundle 6`] = `
+"export { default as Foo } from './Button.js';
+"
+`;
