@@ -7,10 +7,10 @@ Directory tree:
 
 library
   dist
-    Button.css
     Button.js
     Modal.js
     index.js
+    styles.css
   src
     components
       Button
@@ -26,6 +26,33 @@ library
 exports[`fixtures build library with shikaka 2`] = `4`;
 
 exports[`fixtures build library with shikaka 3`] = `
+"var styles = {\\"button\\":\\"Button__button\\",\\"unused\\":\\"Button__unused\\",\\"bar-1\\":\\"Button__bar-1\\",\\"bar-2\\":\\"Button__bar-2\\"};
+
+// eslint-disable-next-line no-unused-vars
+function Button() {
+  return /*#__PURE__*/React.createElement(\\"div\\", {
+    className: styles.button
+  });
+}
+
+export default Button;
+"
+`;
+
+exports[`fixtures build library with shikaka 4`] = `
+"// eslint-disable-next-line no-unused-vars
+function Modal() {}
+
+export default Modal;
+"
+`;
+
+exports[`fixtures build library with shikaka 5`] = `
+"export { default as Foo } from './Button.js';
+"
+`;
+
+exports[`fixtures build library with shikaka 6`] = `
 ".Button__button {
   width: auto;
 }
@@ -44,31 +71,4 @@ exports[`fixtures build library with shikaka 3`] = `
 .Modal__modal__foo {
   border: 1px solid;
 }"
-`;
-
-exports[`fixtures build library with shikaka 4`] = `
-"var styles = {\\"button\\":\\"Button__button\\",\\"unused\\":\\"Button__unused\\",\\"bar-1\\":\\"Button__bar-1\\",\\"bar-2\\":\\"Button__bar-2\\"};
-
-// eslint-disable-next-line no-unused-vars
-function Button() {
-  return /*#__PURE__*/React.createElement(\\"div\\", {
-    className: styles.button
-  });
-}
-
-export default Button;
-"
-`;
-
-exports[`fixtures build library with shikaka 5`] = `
-"// eslint-disable-next-line no-unused-vars
-function Modal() {}
-
-export default Modal;
-"
-`;
-
-exports[`fixtures build library with shikaka 6`] = `
-"export { default as Foo } from './Button.js';
-"
 `;

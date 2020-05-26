@@ -105,7 +105,7 @@ async function buildRollupInputConfig({ input, external, rootDir, bundleReport, 
           generateScopedName: '[folder]__[local]',
           scopeBehaviour: 'local'
         },
-        extract: !!writeMeta
+        extract: writeMeta ? 'styles.css' : false
       }),
       json(),
       commonjs(),
