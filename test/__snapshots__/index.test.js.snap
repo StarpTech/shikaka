@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`fixtures build library with microbundle 1`] = `
+exports[`fixtures build library with shikaka 1`] = `
 "Used script: node cli.js test/fixtures/library/src/index.js --out-dir test/fixtures/library/dist
 
 Directory tree:
@@ -23,9 +23,9 @@ library
 "
 `;
 
-exports[`fixtures build library with microbundle 2`] = `4`;
+exports[`fixtures build library with shikaka 2`] = `4`;
 
-exports[`fixtures build library with microbundle 3`] = `
+exports[`fixtures build library with shikaka 3`] = `
 "var styles = {\\"button\\":\\"Button__button\\",\\"unused\\":\\"Button__unused\\",\\"bar-1\\":\\"Button__bar-1\\",\\"bar-2\\":\\"Button__bar-2\\"};
 
 // eslint-disable-next-line no-unused-vars
@@ -39,7 +39,7 @@ export default Button;
 "
 `;
 
-exports[`fixtures build library with microbundle 4`] = `
+exports[`fixtures build library with shikaka 4`] = `
 "// eslint-disable-next-line no-unused-vars
 function Modal() {}
 
@@ -47,8 +47,14 @@ export default Modal;
 "
 `;
 
-exports[`fixtures build library with microbundle 5`] = `
-".Button__button {
+exports[`fixtures build library with shikaka 5`] = `
+".Modal__modal {
+  width: auto;
+}
+.Modal__modal__foo {
+  border: 1px solid;
+}
+.Button__button {
   width: auto;
 }
 .Button__unused {
@@ -59,16 +65,10 @@ exports[`fixtures build library with microbundle 5`] = `
 }
 .page {
   padding: 20px;
-}
-.Modal__modal {
-  width: auto;
-}
-.Modal__modal__foo {
-  border: 1px solid;
 }"
 `;
 
-exports[`fixtures build library with microbundle 6`] = `
+exports[`fixtures build library with shikaka 6`] = `
 "export { default as Foo } from './Button.js';
 "
 `;

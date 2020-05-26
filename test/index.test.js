@@ -25,7 +25,7 @@ describe('fixtures', () => {
     .readdirSync(FIXTURES_DIR)
     .filter((fixturePath) => fs.statSync(resolve(FIXTURES_DIR, fixturePath)).isDirectory());
 
-  it.each(dirs)('build %s with microbundle', async (fixtureDir) => {
+  it.each(dirs)('build %s with shikaka', async (fixtureDir) => {
     let fixturePath = resolve(FIXTURES_DIR, fixtureDir);
 
     await sleep(1);
