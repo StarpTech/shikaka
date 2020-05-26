@@ -1,3 +1,5 @@
+![Node CI](https://github.com/StarpTech/shikaka/workflows/Node%20CI/badge.svg)
+
 # shikaka
 
 > Q: Do you want to bundle your UI components as easy as possible?
