@@ -6,18 +6,29 @@ const rollup = require('rollup');
 const commonjs = require('@rollup/plugin-commonjs');
 const babel = require('@rollup/plugin-babel');
 const postcss = require('rollup-plugin-postcss');
+const filesize = require('rollup-plugin-filesize');
 const json = require('@rollup/plugin-json');
 const replace = require('@rollup/plugin-replace');
 const { sizeSnapshot } = require('rollup-plugin-size-snapshot');
 const { terser } = require('rollup-plugin-terser');
 const ora = require('ora');
+const { white, blue, green, bold } = require('kleur');
 const pkgUp = require('pkg-up');
 const fs = require('fs-extra');
 const path = require('path');
 const cli = require('cac')('shikaka');
 const pkg = require('./package.json');
 
-async function buildRollupInputConfig({ input, external, rootDir, bundleReport, minify, writeMeta }) {
+async function buildRollupInputConfig({
+  input,
+  external,
+  rootDir,
+  bundleReport,
+  minify,
+  spinner,
+  writeMeta,
+  sourcemap
+}) {
   const componentsPath = path.join(path.dirname(input), 'components');
   const files = await fs.readdir(componentsPath);
   const components = await Promise.all(
@@ -96,11 +107,15 @@ async function buildRollupInputConfig({ input, external, rootDir, bundleReport, 
         ]
       }),
       postcss({
-        plugins: [require('postcss-import'), require('postcss-nested'), require('postcss-preset-env')].filter(
-          (p) => !!p
-        ),
+        plugins: [require('postcss-import'), require('postcss-nested'), require('postcss-preset-env')],
         inject: false,
         root: path.resolve(rootDir),
+        minimize: minify
+          ? {
+              preset: 'default'
+            }
+          : false,
+        sourceMap: sourcemap,
         modules: {
           generateScopedName: '[folder]__[local]',
           scopeBehaviour: 'local'
@@ -111,6 +126,20 @@ async function buildRollupInputConfig({ input, external, rootDir, bundleReport, 
       commonjs(),
       replace({ 'process.env.NODE_ENV': 'production' }),
       minify ? terser() : null,
+      {
+        generateBundle(options) {
+          spinner.stop();
+          console.log(blue(`Build ${bold(options.format.toUpperCase())} output to ${options.dir}:`));
+        }
+      },
+      filesize({
+        showBrotliSize: true,
+        reporter: [
+          function (options, bundle, { bundleSize, fileName }) {
+            console.log(''.padEnd(6, ' ') + green(bundleSize.padEnd(8, ' ')), white(fileName));
+          }
+        ]
+      }),
       bundleReport ? sizeSnapshot({ printInfo: false }) : null
     ].filter((p) => !!p),
     external
@@ -129,6 +158,7 @@ cli
   .option('--out-dir <outDir>', 'Output directory', { default: 'dist' })
   .option('--minify', 'Minify CSS and JS output files', { default: false })
   .option('--report', 'Generates a report about your bundle size', { default: false })
+  .option('--sourcemap', 'Generates sourcemap for CSS and JS', { default: false })
   .option('--format <format>', 'Output format (cjs | umd | es | iife), can be used multiple times', {
     default: ['es']
   })
@@ -138,7 +168,6 @@ cli
   .example((bin) => `  ${bin} src/index.js`)
   .example((bin) => `  ${bin} src/index.js --format cjs --format esm`)
   .example((bin) => `  ${bin} src/index.js --root-dir packages/ui-library`)
-  .example((bin) => `  ${bin} src/index.js --css-file-name theme.css`)
   .action(async (input, options) => {
     await fs.remove(options.outDir);
     const userPkg = await fs.readJSON(await pkgUp({ cwd: path.dirname(path.resolve(input)) }));
@@ -160,6 +189,7 @@ cli
       footer: options.footer,
       freeze: false,
       esModule: false,
+      sourcemap: options.sourcemap,
       globals
     };
     const outputOptions = {
@@ -173,21 +203,21 @@ cli
       // create a bundle
       const { inputOptions } = await buildRollupInputConfig({
         sizeSnapshot: options.sizeSnapshot,
+        sourcemap: options.sourcemap,
         minify: options.minify,
         format,
         writeMeta: i === 0,
         input,
+        spinner,
         rootDir: options.rootDir,
         bundleReport: options.report,
         external
       });
 
       try {
+        spinner.text = `Bundle for '${format}`;
         const bundle = await rollup.rollup(inputOptions);
-        spinner.text = `Bundle for '${format}'`;
-        // or write the bundle to disk
         await bundle.write({ ...outputOptions, format });
-        spinner.stop();
       } catch (error) {
         spinner.color = 'red';
         spinner.fail(error.message);
