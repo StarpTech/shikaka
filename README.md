@@ -70,6 +70,5 @@ shikaka -h
 #### Roadmap
 
 - [ ] Typescript Support
-- [ ] Tests
 - [ ] Extract CSS files on component level
 - [ ] Support `Pure` Scope in CSS Modules
