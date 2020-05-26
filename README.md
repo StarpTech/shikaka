@@ -9,9 +9,10 @@
 
 - 🚀 Fast, zero-config by default.
 - 📦 Using Rollup under the hood.
+- 🤳 Using browserlist to produce highly compatible JS and CSS.
 - 🚗 Automatically transforms JS files using Babel.
 - 💼 JS, CSS Minification
-- 💅 Built-in support for `CSS` ,`Sass` and `CSS modules`.
+- 💅 Built-in support for `CSS` ,`SASS`, `LESS` and `CSS modules`.
 
 This tool is not intended use as alternative to webpack or rollup. We don't bundle `node_modules` or supporting every project requirement. The output by this library is intented to use in a modern module bundler like Parcel or Webpack. This tool was created due to the frustration of bundling React components with good defaults and first-class CSS Modules support.
 

@@ -8,6 +8,7 @@ Directory tree:
 library
   dist
     Button.js
+    Footer.js
     Modal.js
     index.js
     styles.css
@@ -16,6 +17,9 @@ library
       Button
         index.js
         index.module.css
+      Footer
+        index.js
+        index.module.less
       Modal
         index.js
         index.module.scss
@@ -23,7 +27,7 @@ library
 "
 `;
 
-exports[`fixtures build library with shikaka 2`] = `4`;
+exports[`fixtures build library with shikaka 2`] = `5`;
 
 exports[`fixtures build library with shikaka 3`] = `
 "var styles = {\\"button\\":\\"Button__button\\",\\"unused\\":\\"Button__unused\\",\\"bar-1\\":\\"Button__bar-1\\",\\"bar-2\\":\\"Button__bar-2\\"};
@@ -40,6 +44,20 @@ export default Button;
 `;
 
 exports[`fixtures build library with shikaka 4`] = `
+"var styles = {\\"footer\\":\\"Footer__footer\\"};
+
+// eslint-disable-next-line no-unused-vars
+function Button() {
+  return /*#__PURE__*/React.createElement(\\"div\\", {
+    className: styles.footer
+  });
+}
+
+export default Button;
+"
+`;
+
+exports[`fixtures build library with shikaka 5`] = `
 "// eslint-disable-next-line no-unused-vars
 function Modal() {}
 
@@ -47,14 +65,20 @@ export default Modal;
 "
 `;
 
-exports[`fixtures build library with shikaka 5`] = `
+exports[`fixtures build library with shikaka 6`] = `
 "export { default as Foo } from './Button.js';
 "
 `;
 
-exports[`fixtures build library with shikaka 6`] = `
+exports[`fixtures build library with shikaka 7`] = `
 ".Button__button {
-  width: auto;
+  display: grid;
+  transition: all .5s;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  background: linear-gradient(to bottom, white, black);
 }
 .Button__unused {
   width: auto;
@@ -70,5 +94,12 @@ exports[`fixtures build library with shikaka 6`] = `
 }
 .Modal__modal__foo {
   border: 1px solid;
-}"
+  font: 100% Helvetica, sans-serif;
+  color: #333;
+}
+.Footer__footer {
+  color: #fff;
+  background: #428bca;
+}
+"
 `;
