@@ -99,7 +99,5 @@ exports[`fixtures build library with shikaka 7`] = `
 }
 .Modal__modal__foo {
   border: 1px solid;
-  font: 100% Helvetica, sans-serif;
-  color: #333;
 }"
 `;
