@@ -58,7 +58,12 @@ Don't forget to point to the right entry files in your package.json
   "module": "dist/index.js",     // where to generate the ESM bundle
   "scripts": {
     "build": "shikaka src/index.js"
-  }
+  },
+  "browserslist": [             // your supported browsers
+    "defaults",
+    "not ie 11",
+    "not IE_Mob 11"
+  ],
 }
 ```
 

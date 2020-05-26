@@ -27,11 +27,6 @@
       "pre-commit": "lint-staged"
     }
   },
-  "browserslist": [
-    "defaults",
-    "not ie 11",
-    "not IE_Mob 11"
-  ],
   "jest": {
     "testEnvironment": "node",
     "testURL": "http://localhost"
@@ -53,6 +48,7 @@
     "fs-extra": "^9.0.0",
     "less": "^3.11.1",
     "ora": "^4.0.4",
+    "pkg-up": "^3.1.0",
     "postcss-import": "^12.0.1",
     "postcss-nested": "^4.2.1",
     "postcss-preset-env": "^6.7.0",
@@ -62,10 +58,6 @@
     "rollup-plugin-terser": "^6.0.1",
     "sass": "^1.26.5",
     "v8-compile-cache": "^2.1.0"
-  },
-  "peerDependencies": {
-    "react": "16.13.1",
-    "react-dom": "^16.13.1"
   },
   "devDependencies": {
     "babel-eslint": "10.1.0",

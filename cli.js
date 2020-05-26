@@ -11,6 +11,7 @@ const replace = require('@rollup/plugin-replace');
 const { sizeSnapshot } = require('rollup-plugin-size-snapshot');
 const { terser } = require('rollup-plugin-terser');
 const ora = require('ora');
+const pkgUp = require('pkg-up');
 const fs = require('fs-extra');
 const path = require('path');
 const cli = require('cac')('shikaka');
@@ -41,9 +42,11 @@ async function buildRollupInputConfig({ input, external, rootDir, bundleReport, 
   }
 
   const orderedInputs = {};
-  Object.keys(inputs).sort().forEach(function(key) {
-    orderedInputs[key] = inputs[key];
-  });
+  Object.keys(inputs)
+    .sort()
+    .forEach(function (key) {
+      orderedInputs[key] = inputs[key];
+    });
 
   const inputOptions = {
     input: orderedInputs,
@@ -93,12 +96,11 @@ async function buildRollupInputConfig({ input, external, rootDir, bundleReport, 
         ]
       }),
       postcss({
-        plugins: [
-          require('postcss-import'),
-          require('postcss-nested'),
-          require('postcss-preset-env')
-        ].filter((p) => !!p),
+        plugins: [require('postcss-import'), require('postcss-nested'), require('postcss-preset-env')].filter(
+          (p) => !!p
+        ),
         inject: false,
+        root: path.resolve(rootDir),
         modules: {
           generateScopedName: '[folder]__[local]',
           scopeBehaviour: 'local'
@@ -139,9 +141,8 @@ cli
   .example((bin) => `  ${bin} src/index.js --css-file-name theme.css`)
   .action(async (input, options) => {
     await fs.remove(options.outDir);
-    const userPkg = await fs.readJSON(path.resolve(options.rootDir, 'package.json'));
-
-    const deps = Object.keys(userPkg.dependencies).concat(Object.keys(userPkg.peerDependencies));
+    const userPkg = await fs.readJSON(await pkgUp({ cwd: path.dirname(path.resolve(input)) }));
+    const deps = Object.keys(userPkg.dependencies);
     const external = (x) => deps.some((y) => x.startsWith(y));
     const formats = Array.isArray(options.format) ? options.format : [options.format];
     const singleFormat = formats.length === 1;
