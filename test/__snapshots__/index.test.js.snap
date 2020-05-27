@@ -59,7 +59,9 @@ export default Button;
 
 exports[`fixtures build library with shikaka 5`] = `
 "// eslint-disable-next-line no-unused-vars
-function Modal() {}
+function Modal() {
+  return null;
+}
 
 export default Modal;
 "

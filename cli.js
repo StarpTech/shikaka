@@ -13,7 +13,6 @@ const { sizeSnapshot } = require('rollup-plugin-size-snapshot');
 const { terser } = require('rollup-plugin-terser');
 const ora = require('ora');
 const { white, blue, green, bold } = require('kleur');
-const pkgUp = require('pkg-up');
 const fs = require('fs-extra');
 const path = require('path');
 const cli = require('cac')('shikaka');
@@ -111,7 +110,7 @@ async function buildRollupInputConfig({
         plugins: [require('postcss-import'), require('postcss-nested'), require('postcss-preset-env')],
         inject: false,
         root: path.resolve(rootDir),
-        minimize: minify
+        minimize: minify // cssnano
           ? {
               preset: 'default'
             }
@@ -126,7 +125,9 @@ async function buildRollupInputConfig({
       json(),
       commonjs(),
       replace({ 'process.env.NODE_ENV': 'production' }),
-      minify ? terser() : null,
+      minify
+        ? terser()
+        : null,
       {
         generateBundle(options) {
           spinner.stop();
@@ -171,9 +172,7 @@ cli
   .example((bin) => `  ${bin} src/index.js --root-dir packages/ui-library`)
   .action(async (input, options) => {
     await fs.remove(options.outDir);
-    const userPkg = await fs.readJSON(await pkgUp({ cwd: path.dirname(path.resolve(input)) }));
-    const deps = Object.keys(userPkg.dependencies);
-    const external = (x) => deps.some((y) => x.startsWith(y));
+    const external = (x) => x.includes('node_modules');
     const formats = Array.isArray(options.format) ? options.format : [options.format];
     const singleFormat = formats.length === 1;
 
