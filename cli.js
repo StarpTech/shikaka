@@ -11,6 +11,7 @@ const json = require('@rollup/plugin-json');
 const replace = require('@rollup/plugin-replace');
 const { sizeSnapshot } = require('rollup-plugin-size-snapshot');
 const { terser } = require('rollup-plugin-terser');
+const pkgUp = require('pkg-up');
 const ora = require('ora');
 const { white, blue, green, bold } = require('kleur');
 const fs = require('fs-extra');
@@ -125,9 +126,7 @@ async function buildRollupInputConfig({
       json(),
       commonjs(),
       replace({ 'process.env.NODE_ENV': 'production' }),
-      minify
-        ? terser()
-        : null,
+      minify ? terser() : null,
       {
         generateBundle(options) {
           spinner.stop();
@@ -172,7 +171,12 @@ cli
   .example((bin) => `  ${bin} src/index.js --root-dir packages/ui-library`)
   .action(async (input, options) => {
     await fs.remove(options.outDir);
-    const external = (x) => x.includes('node_modules');
+
+    const userPkg = await fs.readJSON(await pkgUp({ cwd: path.dirname(path.resolve(input)) }));
+    const deps = Object.keys(userPkg.dependencies || {});
+    const peerDeps = Object.keys(userPkg.peerDependencies || {});
+    const allDeps = deps.concat(peerDeps)
+    const external = (id) => allDeps.some((name) => id.startsWith(name)) || id.includes(`/node_modules/${id}/`);
     const formats = Array.isArray(options.format) ? options.format : [options.format];
     const singleFormat = formats.length === 1;
 
