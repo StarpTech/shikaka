@@ -68,6 +68,7 @@ async function buildRollupInputConfig({
     plugins: [
       babel.default({
         exclude: 'node_modules/**',
+        cwd: path.resolve(__dirname), // allows look for plugins and configs in shikaka package
         babelHelpers: 'bundled',
         presets: [
           '@babel/preset-react',
