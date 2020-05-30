@@ -2,17 +2,12 @@
     "name": "library",
     "version": "0.0.3",
     "license": "MIT",
-    "main": "main.js",
-    "browserslist": [
-      "defaults",
-      "not ie 11",
-      "not IE_Mob 11"
-    ],
+    "main": "src/index.js",
+    "browserslist": "last 2 Chrome versions",
     "dependencies": {},
     "peerDependencies": {
       "react": "16.13.1",
       "react-dom": "^16.13.1"
-    },
-    "devDependencies": {}
+    }
   }
   

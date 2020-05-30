@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`fixtures build library with shikaka 1`] = `
-"Used script: node cli.js test/fixtures/library/src/index.js --out-dir test/fixtures/library/dist
+exports[`fixtures build "library" with shikaka 1`] = `
+"Used script: node cli.js src/index.js --out-dir test/fixtures/library/dist --root-dir test/fixtures/library
 
 Directory tree:
 
@@ -12,6 +12,7 @@ library
     Modal.js
     index.js
     styles.css
+  package.json
   src
     components
       Button
@@ -27,79 +28,4 @@ library
 "
 `;
 
-exports[`fixtures build library with shikaka 2`] = `5`;
-
-exports[`fixtures build library with shikaka 3`] = `
-"var styles = {\\"button\\":\\"Button__button\\",\\"unused\\":\\"Button__unused\\",\\"bar-1\\":\\"Button__bar-1\\",\\"bar-2\\":\\"Button__bar-2\\"};
-
-// eslint-disable-next-line no-unused-vars
-function Button() {
-  return /*#__PURE__*/React.createElement(\\"div\\", {
-    className: styles.button
-  });
-}
-
-export default Button;
-"
-`;
-
-exports[`fixtures build library with shikaka 4`] = `
-"var styles = {\\"footer\\":\\"Footer__footer\\"};
-
-// eslint-disable-next-line no-unused-vars
-function Button() {
-  return /*#__PURE__*/React.createElement(\\"div\\", {
-    className: styles.footer
-  });
-}
-
-export default Button;
-"
-`;
-
-exports[`fixtures build library with shikaka 5`] = `
-"// eslint-disable-next-line no-unused-vars
-function Modal() {
-  return null;
-}
-
-export default Modal;
-"
-`;
-
-exports[`fixtures build library with shikaka 6`] = `
-"export { default as Foo } from './Button.js';
-"
-`;
-
-exports[`fixtures build library with shikaka 7`] = `
-".Button__button {
-  display: grid;
-  transition: all .5s;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-  background: linear-gradient(to bottom, white, black);
-}
-.Button__unused {
-  width: auto;
-}
-.Button__bar-1 .bar .Button__bar-2 {
-  color: white;
-}
-.page {
-  padding: 20px;
-}
-.Footer__footer {
-  color: #fff;
-  background: #428bca;
-}
-
-.Modal__modal {
-  width: auto;
-}
-.Modal__modal__foo {
-  border: 1px solid;
-}"
-`;
+exports[`fixtures build "library" with shikaka 2`] = `6`;

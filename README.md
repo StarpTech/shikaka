@@ -77,6 +77,31 @@ import Button from 'your-module/dist/Button'
 shikaka -h
 ```
 
+## Development
+
+### Installation
+
+```
+yarn install
+```
+
+### Tests
+
+If you change the code, update the tests and run:
+
+```
+yarn test
+```
+
+### Storybook
+
+Test the library output as it would be your real library with [Storybook](https://storybook.js.org/).
+
+```
+node cli.js test/fixtures/library/src/index.js // example
+yarn storybook
+```
+
 #### Roadmap
 
 - [ ] Typescript Support

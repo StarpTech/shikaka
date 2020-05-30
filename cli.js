@@ -29,8 +29,9 @@ async function buildRollupInputConfig({
   writeMeta,
   sourcemap
 }) {
-  const componentsPath = path.join(path.dirname(input), 'components');
+  const componentsPath = path.join(rootDir, path.dirname(input), 'components');
   const files = await fs.readdir(componentsPath);
+  
   const components = await Promise.all(
     files.map(async (name) => {
       const comPath = path.join(componentsPath, name);
@@ -68,7 +69,7 @@ async function buildRollupInputConfig({
     plugins: [
       babel.default({
         exclude: 'node_modules/**',
-        cwd: path.resolve(__dirname), // allows look for plugins and configs in shikaka package
+        cwd: path.resolve(__dirname), // babel plugins are hosted in that package only
         babelHelpers: 'bundled',
         presets: [
           '@babel/preset-react',
@@ -79,6 +80,7 @@ async function buildRollupInputConfig({
               useBuiltIns: false,
               bugfixes: true,
               modules: false,
+              configPath: rootDir,
               exclude: [
                 'transform-regenerator',
                 'transform-async-to-generator',
@@ -110,7 +112,7 @@ async function buildRollupInputConfig({
       postcss({
         plugins: [require('postcss-import'), require('postcss-nested'), require('postcss-preset-env')],
         inject: false,
-        root: path.resolve(rootDir),
+        root: rootDir,
         minimize: minify // cssnano
           ? {
               preset: 'default'
@@ -237,6 +239,7 @@ cli.version(pkg.version);
 cli.help();
 
 cli.parse();
+
 
 process.on('unhandledRejection', (err) => {
   console.error(err);

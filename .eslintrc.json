@@ -17,7 +17,8 @@
     "prettier/react",
     "plugin:import/errors",
     "plugin:import/warnings",
-    "eslint:recommended"
+    "eslint:recommended",
+    "plugin:react/recommended"
   ],
   "globals": {
     "document": true,
