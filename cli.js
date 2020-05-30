@@ -2,6 +2,7 @@
 
 require('v8-compile-cache');
 
+const { DEFAULT_EXTENSIONS } = require('@babel/core');
 const rollup = require('rollup');
 const commonjs = require('@rollup/plugin-commonjs');
 const babel = require('@rollup/plugin-babel');
@@ -10,6 +11,7 @@ const filesize = require('rollup-plugin-filesize');
 const json = require('@rollup/plugin-json');
 const replace = require('@rollup/plugin-replace');
 const { sizeSnapshot } = require('rollup-plugin-size-snapshot');
+const resolve = require('@rollup/plugin-node-resolve');
 const { terser } = require('rollup-plugin-terser');
 const pkgUp = require('pkg-up');
 const ora = require('ora');
@@ -20,6 +22,7 @@ const cli = require('cac')('shikaka');
 const pkg = require('./package.json');
 
 async function buildRollupInputConfig({
+  useTypescript,
   input,
   external,
   rootDir,
@@ -31,14 +34,26 @@ async function buildRollupInputConfig({
 }) {
   const componentsPath = path.join(rootDir, path.dirname(input), 'components');
   const files = await fs.readdir(componentsPath);
-  
+
   const components = await Promise.all(
     files.map(async (name) => {
       const comPath = path.join(componentsPath, name);
-      const entry = path.join(comPath, 'index.js');
-
       const stat = await fs.stat(comPath);
-      if (!stat.isDirectory()) return null;
+
+      let entry = path.join(comPath, 'index.js');
+      if (useTypescript) {
+        let tsEntry = path.join(comPath, 'index.ts');
+        if (await fs.pathExists(entry)) {
+          entry = tsEntry;
+        } else {
+          let tsxEntry = path.join(comPath, 'index.tsx');
+          if (await fs.pathExists(tsxEntry)) {
+            entry = tsxEntry;
+          }
+        }
+      }
+
+      if (fs.pathExists()) if (!stat.isDirectory()) return null;
 
       const hasFile = await fs.pathExists(entry);
       if (!hasFile) return null;
@@ -71,6 +86,7 @@ async function buildRollupInputConfig({
         exclude: 'node_modules/**',
         cwd: path.resolve(__dirname), // babel plugins are hosted in that package only
         babelHelpers: 'bundled',
+        extensions: [...DEFAULT_EXTENSIONS, '.ts', '.tsx'],
         presets: [
           '@babel/preset-react',
           [
@@ -87,7 +103,8 @@ async function buildRollupInputConfig({
                 'proposal-object-rest-spread'
               ]
             }
-          ]
+          ],
+          ['@babel/preset-typescript', {}]
         ],
         plugins: [
           [
@@ -126,6 +143,9 @@ async function buildRollupInputConfig({
         extract: writeMeta ? 'styles.css' : false
       }),
       json(),
+      resolve.default({
+        extensions: ['.js', '.tsx', '.jsx', '.ts']
+      }),
       commonjs(),
       replace({ 'process.env.NODE_ENV': 'production' }),
       minify ? terser() : null,
@@ -174,11 +194,14 @@ cli
   .action(async (input, options) => {
     await fs.remove(options.outDir);
 
-    const userPkg = await fs.readJSON(await pkgUp({ cwd: path.dirname(path.resolve(input)) }));
+    const useTypescript = path.extname(input) === '.ts' || path.extname(input) === '.tsx';
+    const userPkg = await fs.readJSON(await pkgUp({ cwd: path.resolve(options.rootDir) }));
     const deps = Object.keys(userPkg.dependencies || {});
     const peerDeps = Object.keys(userPkg.peerDependencies || {});
-    const allDeps = deps.concat(peerDeps)
-    const external = (id) => allDeps.some((name) => id.startsWith(name)) || id.includes(`/node_modules/${id}/`);
+    const allDeps = deps.concat(peerDeps);
+    const external = (id) =>
+      allDeps.some((name) => id.startsWith(name)) || id.includes(`/node_modules/${id}/`);
+
     const formats = Array.isArray(options.format) ? options.format : [options.format];
     const singleFormat = formats.length === 1;
 
@@ -208,6 +231,7 @@ cli
       const format = formats[i];
       // create a bundle
       const { inputOptions } = await buildRollupInputConfig({
+        useTypescript,
         sizeSnapshot: options.sizeSnapshot,
         sourcemap: options.sourcemap,
         minify: options.minify,
@@ -239,7 +263,6 @@ cli.version(pkg.version);
 cli.help();
 
 cli.parse();
-
 
 process.on('unhandledRejection', (err) => {
   console.error(err);

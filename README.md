@@ -98,12 +98,11 @@ yarn test
 Test a library fixture output as it would be your real library with [Storybook](https://storybook.js.org/).
 
 ```
-node cli.js test/fixtures/library/src/index.js
+node cli.js src/index.js --out-dir test/fixtures/library/dist --root-dir test/fixtures/library
 yarn storybook
 ```
 
 ### Roadmap
 
-- [ ] Typescript Support
 - [ ] Extract CSS files on component level
 - [ ] Support `Pure` Scope in CSS Modules
