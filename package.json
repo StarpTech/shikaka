@@ -63,7 +63,6 @@
     "rollup-plugin-size-snapshot": "^0.12.0",
     "rollup-plugin-terser": "^6.0.1",
     "sass": "^1.26.5",
-    "typescript": "^3.9.3",
     "v8-compile-cache": "^2.1.0"
   },
   "devDependencies": {
