@@ -10,7 +10,7 @@
 - 🚀 Fast, zero-config by default.
 - 📦 Using Rollup under the hood.
 - 🤳 Using browserlist to produce highly compatible JS and CSS.
-- 🚗 Automatically transforms JS files using Babel.
+- 🚗 Automatically transforms JS/JSX/Typescript files using Babel.
 - 💼 JS, CSS Minification.
 - 💅 Built-in support for `CSS modules` in `SASS`, `LESS` or `CSS`.
 
