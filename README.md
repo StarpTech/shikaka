@@ -95,14 +95,14 @@ yarn test
 
 ### Storybook
 
-Test the library output as it would be your real library with [Storybook](https://storybook.js.org/).
+Test a library fixture output as it would be your real library with [Storybook](https://storybook.js.org/).
 
 ```
-node cli.js test/fixtures/library/src/index.js // example
+node cli.js test/fixtures/library/src/index.js
 yarn storybook
 ```
 
-#### Roadmap
+### Roadmap
 
 - [ ] Typescript Support
 - [ ] Extract CSS files on component level
