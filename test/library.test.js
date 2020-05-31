@@ -1,10 +1,10 @@
 const { prepareLibraryTest } = require('./utils');
 
-describe('fixtures', () => {
-  test('build "library" with shikaka', async () => {
+describe('library fixture', () => {
+  test('build with shikaka', async () => {
     const {
       files: { Button, Footer, Modal, styles }
-    } = await prepareLibraryTest('library', 'src/index.js');
+    } = await prepareLibraryTest('library', 'src/index.js', ['--replace.VERSION', '1.0.0']);
 
     expect(Button).toMatch(
       `import { _objectWithoutPropertiesLoose, _extends } from './_rollupPluginBabelHelpers-`
@@ -46,6 +46,7 @@ export default Button;
 
 var styles = {"footer":"Footer__footer"};
 
+const v = "1.0.0";
 function Footer(_ref) {
   let {
     children
@@ -54,7 +55,7 @@ function Footer(_ref) {
 
   return /*#__PURE__*/React.createElement("button", _extends({
     className: styles.button
-  }, rest), children);
+  }, rest), children, ", ", v);
 }
 
 export default Footer;
@@ -80,32 +81,6 @@ export default Modal;
 }
 .Modal__modal__foo {
   border: 1px solid;
-}`);
-  });
-
-  test('build "library-ts" with shikaka', async () => {
-    const {
-      files: { Button, styles }
-    } = await prepareLibraryTest('library-ts', 'src/index.ts');
-
-    expect(Button).toMatch(`import React from 'react';
-
-var styles = {"button":"Button__button"};
-
-// eslint-disable-next-line no-unused-vars
-function Button(props) {
-  return /*#__PURE__*/React.createElement("button", {
-    className: styles.button
-  }, props.children);
-}
-
-export default Button;
-`);
-    expect(styles).toMatch(`.Button__button {
-  display: grid;
-  transition: all .5s;
-  user-select: none;
-  background: linear-gradient(to bottom, white, black);
 }`);
   });
 });

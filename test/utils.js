@@ -22,14 +22,14 @@ const printTree = (nodes, indentLevel = 0) => {
     );
   };
 
-module.exports.prepareLibraryTest = async (fixtureDir, input) => {
+module.exports.prepareLibraryTest = async (fixtureDir, input, args = []) => {
   let fixturePath = relative(process.cwd(), resolve(FIXTURES_DIR, fixtureDir));
 
   await sleep(1);
 
   const entry = relative(fixturePath, resolve(fixturePath, input));
   const outDir = relative(process.cwd(), `${fixturePath}/dist`);
-  const scriptArgs = ['cli.js', entry, '--out-dir', outDir, '--root-dir', fixturePath];
+  const scriptArgs = ['cli.js', entry, '--out-dir', outDir, '--root-dir', fixturePath, ...args];
 
   await execa(DEFAULT_SCRIPT, scriptArgs);
 

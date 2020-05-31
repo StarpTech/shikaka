@@ -22,6 +22,7 @@ const cli = require('cac')('shikaka');
 const pkg = require('./package.json');
 
 async function buildRollupInputConfig({
+  replacedStrings,
   useTypescript,
   input,
   external,
@@ -83,10 +84,12 @@ async function buildRollupInputConfig({
     },
     plugins: [
       babel.default({
-        exclude: 'node_modules/**',
+        exclude: '/**/node_modules/**',
         cwd: path.resolve(__dirname), // babel plugins are hosted in that package only
         babelHelpers: 'bundled',
         extensions: [...DEFAULT_EXTENSIONS, '.ts', '.tsx'],
+        babelrc: false,
+        configFile: false,
         presets: [
           '@babel/preset-react',
           [
@@ -126,6 +129,7 @@ async function buildRollupInputConfig({
           '@babel/plugin-proposal-nullish-coalescing-operator'
         ]
       }),
+      replace({ ...replacedStrings, 'process.env.NODE_ENV': 'production' }),
       postcss({
         plugins: [require('postcss-import'), require('postcss-nested'), require('postcss-preset-env')],
         inject: false,
@@ -143,11 +147,11 @@ async function buildRollupInputConfig({
         extract: writeMeta ? 'styles.css' : false
       }),
       json(),
+
       resolve.default({
         extensions: ['.js', '.tsx', '.jsx', '.ts']
       }),
       commonjs(),
-      replace({ 'process.env.NODE_ENV': 'production' }),
       minify ? terser() : null,
       {
         generateBundle(options) {
@@ -186,11 +190,13 @@ cli
     default: ['es']
   })
   .option('--quiet', 'Show minimal logs', { default: false })
+  .option('--replace', 'Replaces strings in files while bundling')
   .option('--banner <banner>', 'The file banner')
   .option('--footer <footer>', 'The file footer')
   .example((bin) => `  ${bin} src/index.js`)
   .example((bin) => `  ${bin} src/index.js --format cjs --format esm`)
   .example((bin) => `  ${bin} src/index.js --root-dir packages/ui-library`)
+  .example((bin) => `  ${bin} src/index.js --replace.VERSION 1.0.0`)
   .action(async (input, options) => {
     await fs.remove(options.outDir);
 
@@ -231,6 +237,7 @@ cli
       const format = formats[i];
       // create a bundle
       const { inputOptions } = await buildRollupInputConfig({
+        replacedStrings: options.replace,
         useTypescript,
         sizeSnapshot: options.sizeSnapshot,
         sourcemap: options.sourcemap,
