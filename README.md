@@ -103,4 +103,4 @@ yarn storybook
 
 ### Alternatives
 
-- [create-react-library](https://github.com/transitive-bullshit/create-react-library) As the name suggest, it's like create-react-app but for libraries. The difference between Shikaka is that it produce a complete library template and relies directly on the build tools like rollup and babel. Shikaka was only build to bundle your library with good defaults so you publish it right after it.
+- [create-react-library](https://github.com/transitive-bullshit/create-react-library) As the name suggest, it's like create-react-app but for libraries. The difference between Shikaka is that it produce a complete library template and relies directly on the build tools like rollup and babel. Shikaka was only build to bundle your library with good defaults so you publish it without worrying about size and compatibility.
