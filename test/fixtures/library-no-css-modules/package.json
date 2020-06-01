@@ -1,0 +1,12 @@
+{
+  "name": "library",
+  "version": "0.0.3",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "browserslist": "last 2 Chrome versions",
+  "dependencies": {},
+  "peerDependencies": {
+    "react": "16.13.1",
+    "react-dom": "^16.13.1"
+  }
+}
