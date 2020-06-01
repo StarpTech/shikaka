@@ -7,7 +7,6 @@ const FIXTURES_DIR = `${__dirname}/fixtures`;
 const DEFAULT_SCRIPT = 'node';
 const babelHelpersRegex = /_rollupPluginBabelHelpers-[a-z0-9]+\.js/;
 
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const join = (arr, delimiter = '') => arr.join(delimiter);
 
 const printTree = (nodes, indentLevel = 0) => {
@@ -25,15 +24,11 @@ const printTree = (nodes, indentLevel = 0) => {
 module.exports.prepareLibraryTest = async (fixtureDir, input, args = []) => {
   let fixturePath = relative(process.cwd(), resolve(FIXTURES_DIR, fixtureDir));
 
-  await sleep(1);
-
   const entry = relative(fixturePath, resolve(fixturePath, input));
   const outDir = relative(process.cwd(), `${fixturePath}/dist`);
   const scriptArgs = ['cli.js', entry, '--out-dir', outDir, '--root-dir', fixturePath, ...args];
 
   await execa(DEFAULT_SCRIPT, scriptArgs);
-
-  await sleep(1);
 
   const printedDir = printTree([dirTree(fixturePath)]);
 

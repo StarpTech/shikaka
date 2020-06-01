@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`library-no-css-modules fixture build with shikaka 1`] = `
-"Used script: node cli.js src/index.js --out-dir test/fixtures/library-no-css-modules/dist --root-dir test/fixtures/library-no-css-modules --no-cssmodules
+"Used script: node cli.js src/index.js --out-dir test/fixtures/library-no-css-modules/dist --root-dir test/fixtures/library-no-css-modules --no-css-modules
 
 Directory tree:
 

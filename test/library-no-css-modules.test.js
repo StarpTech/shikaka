@@ -4,7 +4,7 @@ describe('library-no-css-modules fixture', () => {
   test('build with shikaka', async () => {
     const {
       files: { Button, styles }
-    } = await prepareLibraryTest('library-no-css-modules', 'src/index.js', ['--no-cssmodules']);
+    } = await prepareLibraryTest('library-no-css-modules', 'src/index.js', ['--no-css-modules']);
 
     expect(Button).toMatch(`import React from 'react';
 

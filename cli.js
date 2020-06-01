@@ -22,7 +22,7 @@ const cli = require('cac')('shikaka');
 const pkg = require('./package.json');
 
 async function buildRollupInputConfig({
-  cssmodules,
+  cssModules,
   replacedStrings,
   useTypescript,
   input,
@@ -141,9 +141,9 @@ async function buildRollupInputConfig({
             }
           : false,
         sourceMap: sourcemap,
-        modules: cssmodules
+        modules: cssModules
           ? {
-              generateScopedName: '[folder]__[local]',
+              generateScopedName: typeof cssModules === 'string' ? cssModules : '[folder]__[local]',
               scopeBehaviour: 'local'
             }
           : false,
@@ -189,7 +189,7 @@ cli
   .option('--minify', 'Minify CSS and JS output files', { default: false })
   .option('--report', 'Generates a report about your bundle size', { default: false })
   .option('--sourcemap', 'Generates sourcemap for CSS and JS', { default: false })
-  .option('--cssmodules', 'Use CSS Modules instead global CSS', { default: true })
+  .option('--css-modules [cssmodules]', 'Use CSS Modules instead global CSS', { default: true })
   .option('--format <format>', 'Output format (cjs | umd | es | iife), can be used multiple times', {
     default: ['es']
   })
@@ -200,7 +200,8 @@ cli
   .example((bin) => `  ${bin} src/index.js`)
   .example((bin) => `  ${bin} src/index.js --format cjs --format esm`)
   .example((bin) => `  ${bin} src/index.js --root-dir packages/ui-library`)
-  .example((bin) => `  ${bin} src/index.js --no-cssmodules`)
+  .example((bin) => `  ${bin} src/index.js --no-css-modules`)
+  .example((bin) => `  ${bin} src/index.js --css-modules=[name]__[local]___[hash:base64:5]`)
   .example((bin) => `  ${bin} src/index.js --replace.VERSION 1.0.0`)
   .action(async (input, options) => {
     await fs.remove(options.outDir);
@@ -242,7 +243,7 @@ cli
       const format = formats[i];
       // create a bundle
       const { inputOptions } = await buildRollupInputConfig({
-        cssmodules: options.cssmodules,
+        cssModules: options.cssModules,
         replacedStrings: options.replace,
         useTypescript,
         sizeSnapshot: options.sizeSnapshot,
