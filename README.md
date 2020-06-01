@@ -11,6 +11,7 @@
 - It cares about Tree-Shaking (Rollup), Minification (Terser), Autoprefixing (PostCSS) and Polyfilling (Babel).
 - Built-in support for [`CSS Modules`](https://github.com/css-modules/css-modules) in `SASS`, `LESS` or `CSS`.
 - Works with Typescript and React.
+- Creates multiple optimized entry points.
 
 This tool is not intended use as alternative to webpack or rollup. We don't bundle `node_modules` or supporting every project requirement. The output by this library is intented to use in a modern module bundler like Parcel or Webpack. This tool was created due to the frustration of bundling React components with good defaults and first-class CSS Modules support.
 
@@ -100,7 +101,6 @@ node cli.js src/index.js --out-dir test/fixtures/library/dist --root-dir test/fi
 yarn storybook
 ```
 
-### Roadmap
+### Alternatives
 
-- [ ] Extract CSS files on component level
-- [ ] Support `Pure` Scope in CSS Modules
+- [create-react-library](https://github.com/transitive-bullshit/create-react-library) As the name suggest, it's like create-react-app but for libraries. The difference between Shikaka is that it produce a complete library template and relies directly on the build tools like rollup and babel. Shikaka was only build to bundle your library with good defaults so you publish it right after it.
