@@ -33,7 +33,7 @@ your-library
     └── index.js
 ```
 
-and produces by default this:
+and it produces by default this:
 
 ```
 dist
@@ -45,7 +45,7 @@ dist
 
 consumable:
 
-```jsx
+```js
 import { Button } from 'your-module' // or
 import Button from 'your-module/dist/Button'
 ```
@@ -58,10 +58,15 @@ You can also just pass a single entry point.
 $ shikaka src/index.js
 ```
 
-and produces this:
+and it produces this:
 ```
 dist
 └── index.js
+```
+
+consumable:
+```js
+import MyHook from 'your-module'
 ```
 
 ## Installation & Setup
