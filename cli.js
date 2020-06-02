@@ -35,10 +35,10 @@ async function buildRollupInputConfig({
   sourcemap
 }) {
   const componentsPath = path.join(rootDir, path.dirname(input), 'components');
-  const files = await fs.readdir(componentsPath);
   let components = [];
 
   if (await fs.exists(componentsPath)) {
+    const files = await fs.readdir(componentsPath);
     components = await Promise.all(
       files.map(async (name) => {
         const comPath = path.join(componentsPath, name);
