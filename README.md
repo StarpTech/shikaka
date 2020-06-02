@@ -17,6 +17,8 @@ This tool is not intended use as alternative to webpack or rollup. We don't bund
 
 ## Example
 
+### Multiple entry points
+
 Operates on a fixed directory structure like:
 
 ```
@@ -46,6 +48,20 @@ consumable:
 ```jsx
 import { Button } from 'your-module' // or
 import Button from 'your-module/dist/Button'
+```
+
+### Single entry point
+
+You can also just pass a single entry point.
+
+```
+$ shikaka src/index.js
+```
+
+and produces this:
+```
+dist
+└── index.js
 ```
 
 ## Installation & Setup
