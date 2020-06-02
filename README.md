@@ -19,7 +19,7 @@ This tool is not intended use as alternative to webpack or rollup. We don't bund
 
 ### Multiple entry points
 
-Operates on a fixed directory structure like:
+It operates on a fixed directory structure like:
 
 ```
 $ shikaka src/index.js
@@ -33,7 +33,7 @@ your-library
     └── index.js
 ```
 
-and it produces by default this:
+and produces by default this:
 
 ```
 dist
@@ -52,13 +52,17 @@ import Button from 'your-module/dist/Button'
 
 ### Single entry point
 
-You can also just pass a single entry point.
+You can also just pass a single entry point without having a `components` directory.
 
 ```
 $ shikaka src/index.js
+
+your-library
+└── src
+    └── index.js
 ```
 
-and it produces this:
+It produces this:
 ```
 dist
 └── index.js
