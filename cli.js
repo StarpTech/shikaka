@@ -36,33 +36,33 @@ async function buildRollupInputConfig({
 }) {
   const componentsPath = path.join(rootDir, path.dirname(input), 'components');
   const files = await fs.readdir(componentsPath);
+  let components = [];
 
-  const components = await Promise.all(
-    files.map(async (name) => {
-      const comPath = path.join(componentsPath, name);
-      const stat = await fs.stat(comPath);
+  if (await fs.exists(componentsPath)) {
+    components = await Promise.all(
+      files.map(async (name) => {
+        const comPath = path.join(componentsPath, name);
 
-      let entry = path.join(comPath, 'index.js');
-      if (useTypescript) {
-        let tsEntry = path.join(comPath, 'index.ts');
-        if (await fs.pathExists(entry)) {
-          entry = tsEntry;
-        } else {
-          let tsxEntry = path.join(comPath, 'index.tsx');
-          if (await fs.pathExists(tsxEntry)) {
-            entry = tsxEntry;
+        let entry = path.join(comPath, 'index.js');
+        if (useTypescript) {
+          let tsEntry = path.join(comPath, 'index.ts');
+          if (await fs.pathExists(entry)) {
+            entry = tsEntry;
+          } else {
+            let tsxEntry = path.join(comPath, 'index.tsx');
+            if (await fs.pathExists(tsxEntry)) {
+              entry = tsxEntry;
+            }
           }
         }
-      }
 
-      if (fs.pathExists()) if (!stat.isDirectory()) return null;
+        const hasFile = await fs.pathExists(entry);
+        if (!hasFile) return null;
 
-      const hasFile = await fs.pathExists(entry);
-      if (!hasFile) return null;
-
-      return { name, url: entry };
-    })
-  );
+        return { name, url: entry };
+      })
+    );
+  }
 
   const inputs = { index: path.join(rootDir, input) };
 
