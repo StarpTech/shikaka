@@ -1,6 +1,6 @@
 {
   "name": "shikaka",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "bin": "cli.js",
   "repository": "git@github.com:StarpTech/shikaka.git",
   "author": "Dustin Deus <deusdustin@gmail.com>",
