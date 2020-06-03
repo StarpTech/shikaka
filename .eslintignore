@@ -11,3 +11,5 @@ node_modules
 snapshots
 .eslintcache
 jsconfig.json
+test/fixtures
+stories

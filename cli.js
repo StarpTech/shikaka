@@ -2,7 +2,6 @@
 
 require('v8-compile-cache');
 
-const { DEFAULT_EXTENSIONS } = require('@babel/core');
 const rollup = require('rollup');
 const commonjs = require('@rollup/plugin-commonjs');
 const babel = require('@rollup/plugin-babel');
@@ -11,7 +10,7 @@ const filesize = require('rollup-plugin-filesize');
 const json = require('@rollup/plugin-json');
 const replace = require('@rollup/plugin-replace');
 const { sizeSnapshot } = require('rollup-plugin-size-snapshot');
-const resolve = require('@rollup/plugin-node-resolve');
+const nodeResolve = require('@rollup/plugin-node-resolve');
 const { terser } = require('rollup-plugin-terser');
 const pkgUp = require('pkg-up');
 const ora = require('ora');
@@ -20,6 +19,9 @@ const fs = require('fs-extra');
 const path = require('path');
 const cli = require('cac')('shikaka');
 const pkg = require('./package.json');
+
+// Extensions to use when resolving modules
+const EXTENSIONS = ['.ts', '.tsx', '.js', '.jsx', '.es6', '.es', '.mjs'];
 
 async function buildRollupInputConfig({
   cssModules,
@@ -88,7 +90,7 @@ async function buildRollupInputConfig({
         exclude: '/**/node_modules/**',
         cwd: path.resolve(__dirname), // babel plugins are hosted in that package only
         babelHelpers: 'bundled',
-        extensions: [...DEFAULT_EXTENSIONS, '.ts', '.tsx'],
+        extensions: EXTENSIONS,
         babelrc: false,
         configFile: false,
         presets: [
@@ -131,6 +133,12 @@ async function buildRollupInputConfig({
         ]
       }),
       replace({ ...replacedStrings, 'process.env.NODE_ENV': 'production' }),
+      json(),
+      nodeResolve.default({
+        mainFields: ['module', 'jsnext', 'main'],
+        extensions: ['.js', '.tsx', '.jsx', '.ts', '.mjs', '.json', '.node']
+      }),
+      commonjs(),
       postcss({
         plugins: [require('postcss-import'), require('postcss-nested'), require('postcss-preset-env')],
         inject: false,
@@ -149,12 +157,6 @@ async function buildRollupInputConfig({
           : false,
         extract: writeMeta ? 'styles.css' : false
       }),
-      json(),
-
-      resolve.default({
-        extensions: ['.js', '.tsx', '.jsx', '.ts']
-      }),
-      commonjs(),
       minify ? terser() : null,
       {
         generateBundle(options) {
