@@ -84,3 +84,45 @@ export default Modal;
 }`);
   });
 });
+
+describe('library-ts fixture', () => {
+  test('build with shikaka', async () => {
+    const {
+      files: { Button, styles }
+    } = await prepareLibraryTest('library-ts', 'src/index.ts');
+
+    expect(Button).toMatchSnapshot();
+    expect(styles).toMatch(`.Button__button {
+  display: grid;
+  transition: all .5s;
+  user-select: none;
+  background: linear-gradient(to bottom, white, black);
+}`);
+  });
+});
+
+describe('library-no-css-modules fixture', () => {
+  test('build with shikaka', async () => {
+    const {
+      files: { Button, styles }
+    } = await prepareLibraryTest('library-no-css-modules', 'src/index.js', ['--no-css-modules']);
+
+    expect(Button).toMatchSnapshot();
+    expect(styles).toMatch(`.button {
+  display: grid;
+  transition: all .5s;
+  user-select: none;
+  background: linear-gradient(to bottom, white, black);
+}`);
+  });
+});
+
+describe('library-ts-simple fixture', () => {
+  test('build with shikaka', async () => {
+    const {
+      files: { index }
+    } = await prepareLibraryTest('library-ts-simple', 'src/index.ts', ['--ts-config', 'tsconfig.release.json']);
+
+    expect(index).toMatchSnapshot();
+  });
+});

@@ -2,6 +2,7 @@
 
 require('v8-compile-cache');
 
+const tryRequire = require('try-require');
 const rollup = require('rollup');
 const commonjs = require('@rollup/plugin-commonjs');
 const babel = require('@rollup/plugin-babel');
@@ -11,6 +12,7 @@ const json = require('@rollup/plugin-json');
 const replace = require('@rollup/plugin-replace');
 const { sizeSnapshot } = require('rollup-plugin-size-snapshot');
 const nodeResolve = require('@rollup/plugin-node-resolve');
+const typescript = tryRequire('rollup-plugin-typescript2')
 const { terser } = require('rollup-plugin-terser');
 const pkgUp = require('pkg-up');
 const ora = require('ora');
@@ -20,10 +22,12 @@ const path = require('path');
 const cli = require('cac')('shikaka');
 const pkg = require('./package.json');
 
+
 // Extensions to use when resolving modules
 const EXTENSIONS = ['.ts', '.tsx', '.js', '.jsx', '.es6', '.es', '.mjs'];
 
 async function buildRollupInputConfig({
+  tsConfig,
   cssModules,
   replacedStrings,
   useTypescript,
@@ -86,6 +90,24 @@ async function buildRollupInputConfig({
       moduleSideEffects: false
     },
     plugins: [
+      replace({ ...replacedStrings, 'process.env.NODE_ENV': 'production' }),
+      json(),
+      nodeResolve.default({
+        mainFields: ['module', 'jsnext', 'main'],
+        extensions: ['.js', '.tsx', '.jsx', '.ts', '.mjs', '.json', '.node']
+      }),
+      useTypescript && typescript && tryRequire.resolve('typescript') ? typescript({
+        cwd: rootDir,
+        tsConfig,
+        tsconfigOverride: {
+          compilerOptions : {
+            declaration: false,
+            module: 'esnext',
+            jsx: 'react',
+            allowSyntheticDefaultImports: true
+          }
+        }
+      }) : null,
       babel.default({
         exclude: '/**/node_modules/**',
         cwd: path.resolve(__dirname), // babel plugins are hosted in that package only
@@ -131,12 +153,6 @@ async function buildRollupInputConfig({
           '@babel/plugin-proposal-optional-chaining',
           '@babel/plugin-proposal-nullish-coalescing-operator'
         ]
-      }),
-      replace({ ...replacedStrings, 'process.env.NODE_ENV': 'production' }),
-      json(),
-      nodeResolve.default({
-        mainFields: ['module', 'jsnext', 'main'],
-        extensions: ['.js', '.tsx', '.jsx', '.ts', '.mjs', '.json', '.node']
       }),
       commonjs(),
       postcss({
@@ -192,6 +208,7 @@ cli
   .option('--report', 'Generates a report about your bundle size', { default: false })
   .option('--sourcemap', 'Generates sourcemap for CSS and JS', { default: false })
   .option('--css-modules [cssmodules]', 'Use CSS Modules instead global CSS', { default: true })
+  .option('--ts-config', 'Path to your tsconfig.json')
   .option('--format <format>', 'Output format (cjs | umd | es | iife), can be used multiple times', {
     default: ['es']
   })
@@ -205,6 +222,7 @@ cli
   .example((bin) => `  ${bin} src/index.js --no-css-modules`)
   .example((bin) => `  ${bin} src/index.js --css-modules=[name]__[local]___[hash:base64:5]`)
   .example((bin) => `  ${bin} src/index.js --replace.VERSION 1.0.0`)
+  .example((bin) => `  ${bin} src/index.ts --ts-config tsconfig.release.json`)
   .action(async (input, options) => {
     await fs.remove(options.outDir);
 
@@ -245,6 +263,7 @@ cli
       const format = formats[i];
       // create a bundle
       const { inputOptions } = await buildRollupInputConfig({
+        tsConfig: options.tsConfig,
         cssModules: options.cssModules,
         replacedStrings: options.replace,
         useTypescript,

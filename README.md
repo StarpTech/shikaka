@@ -95,6 +95,10 @@ import MyHook from 'your-module'
 }
 ```
 
+## TypeScript
+
+We automatically use [rollup-plugin-typescript2](https://github.com/ezolenko/rollup-plugin-typescript2) when the entry file ends with `.ts` extension, however you have to install [rollup-plugin-typescript2](https://github.com/ezolenko/rollup-plugin-typescript2) alongside `typescript` to make it work.
+
 ## Help
 
 ```
@@ -129,3 +133,8 @@ yarn storybook
 ### Alternatives
 
 - [create-react-library](https://github.com/transitive-bullshit/create-react-library) As the name suggest, it's like create-react-app but for libraries. The difference between Shikaka is that it produce a complete library template and relies directly on the build tools like rollup and babel. Shikaka was only build to bundle your library with good defaults so you can publish your library without worrying about size and compatibility.
+
+### Inspired by
+
+- [bili](https://github.com/egoist/bili) - Bili makes it easier to bundle JavaScript libraries.
+- [microbundle](https://github.com/developit/microbundle) - Zero-configuration bundler for tiny modules.
