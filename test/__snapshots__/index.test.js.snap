@@ -67,7 +67,7 @@ export default Button;
 `;
 
 exports[`library-ts fixture build with shikaka 1`] = `
-"Used script: node cli.js src/index.ts --out-dir test/fixtures/library-ts/dist --root-dir test/fixtures/library-ts --ts-config tsconfig.json
+"Used script: node cli.js src/index.ts --out-dir test/fixtures/library-ts/dist --root-dir test/fixtures/library-ts
 
 Directory tree:
 
