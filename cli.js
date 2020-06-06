@@ -120,8 +120,8 @@ async function buildRollupInputConfig({
         tsConfig,
         tsconfigOverride: {
           compilerOptions : {
+            declaration: true,
             sourceMap: sourcemap,
-            declaration: false,
             module: 'ESNext',
             target: 'esnext',
             jsx: 'react',
