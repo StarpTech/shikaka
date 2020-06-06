@@ -128,11 +128,11 @@ function greeter(person) {
   return 'Hello, ' + person.firstName + ' ' + person.lastName;
 }
 
-var user = {
+let user = {
   firstName: 'Jane',
   lastName: 'User'
 };
-var s = greeter(user);
+let s = greeter(user);
 
 export { s };
 "
