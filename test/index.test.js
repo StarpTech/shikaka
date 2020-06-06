@@ -89,7 +89,7 @@ describe('library-ts fixture', () => {
   test('build with shikaka', async () => {
     const {
       files: { Button, styles }
-    } = await prepareLibraryTest('library-ts', 'src/index.ts');
+    } = await prepareLibraryTest('library-ts', 'src/index.ts', ['--ts-config', 'tsconfig.json']);
 
     expect(Button).toMatchSnapshot();
     expect(styles).toMatch(`.Button__button {

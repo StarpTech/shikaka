@@ -40,7 +40,8 @@ async function buildRollupInputConfig({
   writeMeta,
   sourcemap
 }) {
-  const componentsPath = path.join(rootDir, path.dirname(input), 'components');
+  const resolvedRoot = path.resolve(rootDir)
+  const componentsPath = path.join(resolvedRoot, path.dirname(input), 'components');
   let components = [];
 
   if (await fs.exists(componentsPath)) {
@@ -70,7 +71,7 @@ async function buildRollupInputConfig({
     );
   }
 
-  const inputs = { index: path.join(rootDir, input) };
+  const inputs = { index: path.join(resolvedRoot, input) };
 
   for (const { name, url } of components) {
     inputs[name] = url;
@@ -96,8 +97,26 @@ async function buildRollupInputConfig({
         mainFields: ['module', 'jsnext', 'main'],
         extensions: ['.js', '.tsx', '.jsx', '.ts', '.mjs', '.json', '.node']
       }),
+      postcss({
+        plugins: [require('postcss-import'), require('postcss-nested'), require('postcss-preset-env')],
+        inject: false,
+        root: resolvedRoot,
+        minimize: minify // cssnano
+          ? {
+              preset: 'default'
+            }
+          : false,
+        sourceMap: sourcemap,
+        modules: cssModules
+          ? {
+              generateScopedName: typeof cssModules === 'string' ? cssModules : '[folder]__[local]',
+              scopeBehaviour: 'local'
+            }
+          : false,
+        extract: writeMeta ? 'styles.css' : false
+      }),
       useTypescript && typescript && tryRequire.resolve('typescript') ? typescript({
-        cwd: rootDir,
+        cwd: resolvedRoot,
         tsConfig,
         tsconfigOverride: {
           compilerOptions : {
@@ -126,7 +145,7 @@ async function buildRollupInputConfig({
               useBuiltIns: false,
               bugfixes: true,
               modules: false,
-              configPath: rootDir,
+              configPath: resolvedRoot,
               exclude: [
                 'transform-regenerator',
                 'transform-async-to-generator',
@@ -157,24 +176,6 @@ async function buildRollupInputConfig({
         ]
       }),
       commonjs(),
-      postcss({
-        plugins: [require('postcss-import'), require('postcss-nested'), require('postcss-preset-env')],
-        inject: false,
-        root: rootDir,
-        minimize: minify // cssnano
-          ? {
-              preset: 'default'
-            }
-          : false,
-        sourceMap: sourcemap,
-        modules: cssModules
-          ? {
-              generateScopedName: typeof cssModules === 'string' ? cssModules : '[folder]__[local]',
-              scopeBehaviour: 'local'
-            }
-          : false,
-        extract: writeMeta ? 'styles.css' : false
-      }),
       minify ? terser() : null,
       {
         generateBundle(options) {
