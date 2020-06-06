@@ -74,6 +74,10 @@ Directory tree:
 library-ts
   dist
     Button.js
+    components
+      Button
+        index.d.ts
+    index.d.ts
     index.js
     styles.css
   package.json
@@ -84,11 +88,12 @@ library-ts
         index.tsx
     index.ts
   tsconfig.json
-  typings.d.ts
+  types
+    index.d.ts
 "
 `;
 
-exports[`library-ts fixture build with shikaka 2`] = `3`;
+exports[`library-ts fixture build with shikaka 2`] = `5`;
 
 exports[`library-ts fixture build with shikaka 3`] = `
 "import React from 'react';
@@ -113,6 +118,7 @@ Directory tree:
 
 library-ts-simple
   dist
+    index.d.ts
     index.js
   package.json
   src
@@ -121,7 +127,7 @@ library-ts-simple
 "
 `;
 
-exports[`library-ts-simple fixture build with shikaka 2`] = `1`;
+exports[`library-ts-simple fixture build with shikaka 2`] = `2`;
 
 exports[`library-ts-simple fixture build with shikaka 3`] = `
 "// test comment

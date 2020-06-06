@@ -84,6 +84,7 @@ import MyHook from 'your-module'
   "source": "src/index.js",       // your source code
   "main": "dist/cjs/index.js",    // for CommonJS/Node bundle
   "module": "dist/es/index.js",   // for ESM bundle
+  "types": "dist/index.d.ts"      // when you use TS
   "scripts": {
     "build": "shikaka src/index.js --format cjs --format es" // by default only ESM
   },

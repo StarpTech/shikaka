@@ -12,7 +12,7 @@ const json = require('@rollup/plugin-json');
 const replace = require('@rollup/plugin-replace');
 const { sizeSnapshot } = require('rollup-plugin-size-snapshot');
 const nodeResolve = require('@rollup/plugin-node-resolve');
-const typescript = tryRequire('rollup-plugin-typescript2')
+const typescript = tryRequire('rollup-plugin-typescript2');
 const { terser } = require('rollup-plugin-terser');
 const pkgUp = require('pkg-up');
 const ora = require('ora');
@@ -21,7 +21,6 @@ const fs = require('fs-extra');
 const path = require('path');
 const cli = require('cac')('shikaka');
 const pkg = require('./package.json');
-
 
 // Extensions to use when resolving modules
 const EXTENSIONS = ['.ts', '.tsx', '.js', '.jsx', '.es6', '.es', '.mjs'];
@@ -40,7 +39,7 @@ async function buildRollupInputConfig({
   writeMeta,
   sourcemap
 }) {
-  const resolvedRoot = path.resolve(rootDir)
+  const resolvedRoot = path.resolve(rootDir);
   const componentsPath = path.join(resolvedRoot, path.dirname(input), 'components');
   let components = [];
 
@@ -115,20 +114,26 @@ async function buildRollupInputConfig({
           : false,
         extract: writeMeta ? 'styles.css' : false
       }),
-      useTypescript && typescript && tryRequire.resolve('typescript') ? typescript({
-        cwd: resolvedRoot,
-        tsConfig,
-        tsconfigOverride: {
-          compilerOptions : {
-            declaration: true,
-            sourceMap: sourcemap,
-            module: 'ESNext',
-            target: 'esnext',
-            jsx: 'react',
-            allowSyntheticDefaultImports: true
-          }
-        }
-      }) : null,
+      useTypescript && typescript && tryRequire.resolve('typescript')
+        ? typescript({
+            cwd: resolvedRoot,
+            tsConfig,
+            tsconfigDefaults: {
+              compilerOptions: {
+                declaration: true,
+                sourceMap: sourcemap,
+                jsx: 'react',
+                allowSyntheticDefaultImports: true
+              }
+            },
+            tsconfigOverride: {
+              compilerOptions: {
+                module: 'ESNext',
+                target: 'esnext'
+              }
+            }
+          })
+        : null,
       babel.default({
         exclude: '/**/node_modules/**',
         cwd: path.resolve(__dirname), // babel plugins are hosted in that package only

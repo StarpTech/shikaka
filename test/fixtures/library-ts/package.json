@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "browserslist": "last 2 Chrome versions",
   "dependencies": {},
-  "types": "typings.d.ts",
+  "types": "types/index.d.ts",
   "peerDependencies": {
     "react": "16.13.1",
     "react-dom": "^16.13.1"
