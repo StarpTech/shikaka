@@ -10,20 +10,26 @@ on:
       - "**.md"
       - "docs/**"
 
+env:
+    CI: true
+
 jobs:
   build:
-    runs-on: ubuntu-latest
-
+    runs-on: ${{ matrix.os }}
     strategy:
-      matrix:
-        node-version: [12.x, 13.x]
+        matrix:
+            node-version: [12.x, 14.x]
+            os: [ubuntu-latest, windows-latest]
+    name: Node ${{ matrix.node-version }}
 
     steps:
       - uses: actions/checkout@v2
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
+
       - name: install and test
         run: |
           yarn install
