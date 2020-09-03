@@ -1,5 +1,7 @@
 const { prepareLibraryTest } = require('./utils');
 
+jest.setTimeout(10000);
+
 describe('library fixture', () => {
   test('build with shikaka', async () => {
     const {
