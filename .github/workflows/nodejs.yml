@@ -30,7 +30,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: install and test
+      - name: install
         run: |
           yarn install
+
+      - name: test
+        run: |
           yarn test
