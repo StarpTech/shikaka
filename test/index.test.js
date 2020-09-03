@@ -117,6 +117,27 @@ describe('library-no-css-modules fixture', () => {
   });
 });
 
+describe('library-auto-css-modules fixture', () => {
+  test('build with shikaka', async () => {
+    const {
+      files: { Button, styles }
+    } = await prepareLibraryTest('library-auto-css-modules', 'src/index.js');
+
+    expect(Button).toMatchSnapshot();
+    expect(styles).toMatch(`.Footer__footer {
+  color: #fff;
+  background: #428bca;
+}
+
+.button {
+  display: grid;
+  transition: all .5s;
+  user-select: none;
+  background: linear-gradient(to bottom, white, black);
+}`);
+  });
+});
+
 describe('library-ts-simple fixture', () => {
   test('build with shikaka', async () => {
     const {

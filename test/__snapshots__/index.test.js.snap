@@ -30,6 +30,46 @@ library
 
 exports[`library fixture build with shikaka 2`] = `6`;
 
+exports[`library-auto-css-modules fixture build with shikaka 1`] = `
+"Used script: node cli.js src/index.js --out-dir test/fixtures/library-auto-css-modules/dist --root-dir test/fixtures/library-auto-css-modules
+
+Directory tree:
+
+library-auto-css-modules
+  dist
+    Button.js
+    Footer.js
+    index.js
+    styles.css
+  package.json
+  src
+    components
+      Button
+        index.css
+        index.js
+      Footer
+        index.js
+        index.module.less
+    index.js
+"
+`;
+
+exports[`library-auto-css-modules fixture build with shikaka 2`] = `4`;
+
+exports[`library-auto-css-modules fixture build with shikaka 3`] = `
+"import React from 'react';
+
+// eslint-disable-next-line no-unused-vars
+function Button(props) {
+  return /*#__PURE__*/React.createElement(\\"button\\", {
+    className: \\"button\\"
+  }, props.children);
+}
+
+export default Button;
+"
+`;
+
 exports[`library-no-css-modules fixture build with shikaka 1`] = `
 "Used script: node cli.js src/index.js --out-dir test/fixtures/library-no-css-modules/dist --root-dir test/fixtures/library-no-css-modules --no-css-modules
 
@@ -102,7 +142,7 @@ var styles = {\\"button\\":\\"Button__button\\"};
 
 // eslint-disable-next-line no-unused-vars
 function Button(props) {
-  return React.createElement(\\"button\\", {
+  return /*#__PURE__*/React.createElement(\\"button\\", {
     className: styles.button
   }, props.children);
 }

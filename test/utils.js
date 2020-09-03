@@ -2,6 +2,7 @@ const fs = require('fs-extra');
 const { resolve, relative, basename, extname } = require('path');
 const dirTree = require('directory-tree');
 const execa = require('execa');
+const slash = require('slash');
 
 const FIXTURES_DIR = `${__dirname}/fixtures`;
 const DEFAULT_SCRIPT = 'node';
@@ -10,23 +11,32 @@ const babelHelpersRegex = /_rollupPluginBabelHelpers-[a-z0-9]+\.js/;
 const join = (arr, delimiter = '') => arr.join(delimiter);
 
 const printTree = (nodes, indentLevel = 0) => {
-    const indent = '  '.repeat(indentLevel);
-    return join(
-      nodes
-        .filter((node) => !babelHelpersRegex.test(node.name) && node.name[0] !== '.')
-        .map((node) => {
-          const isDir = node.type === 'directory';
-          return `${indent}${node.name}\n${isDir ? printTree(node.children, indentLevel + 1) : ''}`;
-        })
-    );
-  };
+  const indent = '  '.repeat(indentLevel);
+  return join(
+    nodes
+      .sort((a, b) => (a.name > b.name ? 1 : -1)) // due to linux and windows
+      .filter((node) => !babelHelpersRegex.test(node.name) && node.name[0] !== '.')
+      .map((node) => {
+        const isDir = node.type === 'directory';
+        return `${indent}${node.name}\n${isDir ? printTree(node.children, indentLevel + 1) : ''}`;
+      })
+  );
+};
 
 module.exports.prepareLibraryTest = async (fixtureDir, input, args = []) => {
   let fixturePath = relative(process.cwd(), resolve(FIXTURES_DIR, fixtureDir));
 
   const entry = relative(fixturePath, resolve(fixturePath, input));
   const outDir = relative(process.cwd(), `${fixturePath}/dist`);
-  const scriptArgs = ['cli.js', entry, '--out-dir', outDir, '--root-dir', fixturePath, ...args];
+  const scriptArgs = [
+    'cli.js',
+    slash(entry),
+    '--out-dir',
+    slash(outDir),
+    '--root-dir',
+    slash(fixturePath),
+    ...args
+  ];
 
   await execa(DEFAULT_SCRIPT, scriptArgs);
 

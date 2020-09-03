@@ -106,6 +106,7 @@ async function buildRollupInputConfig({
             }
           : false,
         sourceMap: sourcemap,
+        autoModules: true,
         modules: cssModules
           ? {
               generateScopedName: typeof cssModules === 'string' ? cssModules : '[folder]__[local]',
