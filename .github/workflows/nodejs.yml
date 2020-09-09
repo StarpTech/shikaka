@@ -18,7 +18,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
         matrix:
-            node-version: [12.x, 14.x]
+            node-version: [1.x, 12.x, 14.x]
             os: [ubuntu-latest]
     name: Node ${{ matrix.node-version }}
 
@@ -35,5 +35,9 @@ jobs:
           yarn install
 
       - name: test
+        run: |
+          yarn test
+
+      - name: 222222
         run: |
           yarn test
