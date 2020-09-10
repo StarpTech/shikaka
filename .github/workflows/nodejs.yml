@@ -9,7 +9,6 @@ name: Node CI
     - '**.md'
     - docs/**
 env:
-  A: foo
   CI: "true"
 jobs:
   build:
