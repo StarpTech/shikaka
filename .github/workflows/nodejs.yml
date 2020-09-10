@@ -1,27 +1,16 @@
 name: Node CI
 "on":
-  schedule: []
   push:
     paths-ignore:
     - '**.md'
     - docs/**
-    tags-ignore: []
-    branches: []
-    tags: []
-  release:
-    types: []
   pull_request:
     paths-ignore:
     - '**.md'
     - docs/**
-    tags-ignore: []
-    branches: []
-    tags: []
 env:
   A: foo
   CI: "true"
-defaults:
-  run: {}
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -33,10 +22,6 @@ jobs:
         os:
         - ubuntu-latest
     name: Node ${{ matrix.node-version }}
-    env: {}
-    defaults:
-      run: {}
-    outputs: {}
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v1
