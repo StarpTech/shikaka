@@ -1,4 +1,4 @@
-name: CI
+name: Node CI
 "on":
   push:
     paths-ignore:
@@ -16,7 +16,6 @@ jobs:
     strategy:
       matrix:
         node-version:
-        - 11.x
         - 12.x
         - 14.x
         os:
@@ -24,7 +23,6 @@ jobs:
     name: Node ${{ matrix.node-version }}
     steps:
     - uses: actions/checkout@v2
-      id: 9abcaef6-a468-431c-8b44-2941a6833eb2
     - uses: actions/setup-node@v1
       name: Use Node.js ${{ matrix.node-version }}
       with:
@@ -34,3 +32,6 @@ jobs:
         yarn install
     - name: test
       run: yarn test
+  foo:
+    container:
+      image: nginx
